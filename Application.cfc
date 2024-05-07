@@ -2,8 +2,9 @@ component
 	output="false"
 	hint="I define the application settings and event handlers."
 	{
-
-	
+    this.name = "demo";
+    this.datasource = "demo"; 
+    this.ormEnabled = true; 
 	// Calculate the base path of the application. This will be used
 	// to create a unique name as well as defined several of the 
 	// application mappings.
@@ -37,16 +38,20 @@ component
 	
 	// I initialize the user's web session.
 	function onSessionStart(){
-		
-		// ...
+		var session.login=false;
+		var session.fullname='';
+		return( true );
 
 	}
 	
 	
 	// I initiliaze the incoming request.
 	function onRequestStart( String scriptName ){
-		
-		// Check to see if the application needs to be refreshed.
+		this.ormSettings = {
+            dbcreate = "update", 
+            logsql = true 
+        };
+        ormReload();
 		if (structKeyExists( url, "init" )){
 			
 			// Manually invoke the application and session reset.

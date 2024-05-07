@@ -1,24 +1,3 @@
-<!---<cfinclude  template="header.cfm">
-<cfinclude  template="Loginnavigation.cfm">
-<div class="d-flex loginDiv">
-    <div class="d-flex">
-        <div class="formLeft"> 
-            <img src="./assets/images/logo.png" alt="Image" width="100" height="100">
-        </div>
-        <div class="">
-            <span>LOGIN</span>
-            <form action="index.cfm?action=login" method="post">
-                <input type="text" name="strUsername" placeholder="Username">
-                <input type="password" name="strPassword" placeholder="Password">
-                
-            </form>
-        </div>
-    </div>
-</div>
-
---->
-
-
 <cfinclude template="header.cfm">
 <cfinclude template="Loginnavigation.cfm">
 <div class="d-flex justify-content-center align-items-center loginMainContainer">
@@ -29,11 +8,10 @@
         <div class="rightContent">
             <span>LOGIN</span>
             <form action="index.cfm?action=login" method="post">
-                <input type="text" name="strUsername" placeholder="Username"><br><br>
-                <input type="password" name="strPassword" placeholder="Password"><br><br>
+                <input type="text" name="strUsername" id="strUsername" placeholder="Username"><br><br>
+                <input type="password" name="strPassword" id="strPassword" placeholder="Password"><br><br>
                 <button type="submit" name="login" id="loginBtn">LOGIN</button>
-                <p id="successMsg" style="color:green;" class="pt-2"> </p>
-                <p id="errorMsg" style="color:red;"> </p>
+                <p id="message" class="pt-2 text-center"> </p>
             </form>
             <span id="signuptext">Or Sign In Using</span><br>
             <div class="iconDiv">
@@ -42,7 +20,7 @@
                 <a href=""><img src="./assets/images/googleicon.JPG" alt="Logo" width="45" height="45" class="d-inline-block align-text-top logoImage"></a>
             </div>
             <div class="registerDiv">
-                <span>Don't have an account?<a href="">Register Here</a>
+                <span>Don't have an account?<a href="?action=signup">Register Here</a>
             </div>
         </div>
     </div>

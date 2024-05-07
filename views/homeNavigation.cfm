@@ -5,10 +5,8 @@
       <span class="logoTitle">ADDRESS BOOK</span>
     </div>
     <div class="signUpdiv">
-      <span class="material-symbols-outlined userIcon">person</span>
-      <a href="?action=signup" class="signUpText">Sign Up</a>
-      <span class="material-symbols-outlined loginIcon">login</span>
-      <a href="?action=login" class="LoginText">Login</a>
+      <span class="material-symbols-outlined loginIcon">logout</span>
+      <a href="?action=login" class="LoginText">Logout</a>
     </div>
   </div>
 </nav>

@@ -7,6 +7,12 @@
             include "/views/login.cfm";
             
         break;
+        case "signup":
+            include "/views/signup.cfm";
+        break;
+        case "listPage":
+            include "/views/listPage.cfm";
+        break;
 
         // The provided event could not be matched.
         default:
