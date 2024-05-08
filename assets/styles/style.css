@@ -72,43 +72,49 @@ body {
 	background-color: white;
 	height: 50px;
 }
-.leftSpace,.rightSpace{
-	width:8%;
+
+.leftSpace,
+.rightSpace {
+	width: 8%;
 	background-color: #d8e5f1;
 }
 
 .printDiv {
 	width: 84%;
 }
-.mainContainer{
+
+.mainContainer {
 	background-color: #d8e5f1;
 	height: 575px;
 
 }
-.leftSection{
+
+.leftSection {
 	background: white;
-    width: 180px;
-    height: 196px;
-    padding: 16px;
+	width: 180px;
+	height: 196px;
+	padding: 16px;
 	margin-left: 8%;
+	justify-content: center;
+	align-items: center;
 }
-#user{
-	padding-left:25px;
-}
-.leftSection div button{
+
+.leftSection div button {
 	color: white;
-    background: #337ab7;
-    border-radius: 16px;
-    border: none;
+	background: #337ab7;
+	border-radius: 16px;
+	border: none;
 	font-size: small;
-    font-weight: 500;
-    margin-left: 10px;
+	font-weight: 500;
 }
-.leftSection div p{
-	padding-left: 12px;
+
+.leftSection div p {
 	color: #337ab7;
-    font-weight: 600;
+	font-weight: 600;
+	display: flex;
+	align-items: center;
 }
+
 .listDiv {
 	padding-top: 10px;
 }
@@ -196,3 +202,93 @@ div.rightContent>span:first-child {
 	font-size: xx-large;
 }
 
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+th {
+	color: #337ab7;
+	font-size: small;
+}
+
+th,
+td {
+	padding: 8px;
+	text-align: left;
+}
+
+tr {
+	border-bottom: 1px solid #D3D3D3 !important;
+}
+
+.rightSection {
+	margin-left: 19px;
+	height: fit-content;
+	background: white;
+}
+
+.modalLeft {
+	width: 2%;
+	height: auto;
+}
+
+.modal-dialog {
+	max-width: 50% !important;
+}
+
+.modal-header {
+	width: 74%;
+	display: inline !important;
+	background-color: white;
+}
+
+.modal-title-div {
+	background-color: #daeef7 !important;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+}
+
+.modal-title {
+	color: #337ab7;
+}
+
+.modal-content {
+	background-color: #daeef7 !important;
+}
+
+.personContact {
+	margin-top: 9px;
+	border-bottom: 2px solid #337ab7;
+	font-size: larger;
+	color: #337ab7;
+	font-weight: 500;
+}
+
+.personContact p {
+	margin: 0px;
+}
+
+.titleLabel label {
+	color: #337ab7;
+	font-weight: 600;
+}
+
+
+input,
+select {
+	border: none;
+	border-bottom: 1px solid lightgray;
+	color: #5c5c5c;
+	outline: none;
+}
+
+#createSubmitBtn {
+	border-radius: 16px;
+	margin-top: 10px;
+	border: none;
+	border: 1px solid #337ab7;
+	color: #337ab7;
+}

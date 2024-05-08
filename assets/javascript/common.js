@@ -83,5 +83,25 @@ $(document).ready(function() {
     
         }
     });
+    $('#formBtn').submit(function(e) {
+        
+        e.preventDefault();
+        var strTitle = $("#strTitle").val().trim();
+        var strFirstName = $("#strFirstName").val().trim();
+        var strLastName = $("#strLastName").val().trim();
+        var strGender = $("#strGender").val().trim();
+        var strBirthday = $("#strBirthday").val().trim();
+        var strAddress = $("#strAddress").val().trim();
+        var strStreet = $("#strStreet").val().trim();
+        var intPincode = $("#intPincode").val().trim();
+        var strEmailID = $("#strEmailID").val().trim();
+        var intPhoneNumber = $("#intPhoneNumber").val().trim();
+
+        if (strTitle === '' || strFirstName === '' || strLastName === '' || strGender === '' || strBirthday === '' || strAddress === '' || strStreet === '' || intPincode === ''|| strEmailID === '' || intPhoneNumber === '') {
+            $("#validationMessage").text('Username and password are required.').css("color", "red");
+            return;
+        }
+
+    });
 
 });
