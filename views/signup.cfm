@@ -1,5 +1,4 @@
-<cfinclude template="header.cfm">
-<cfinclude template="Loginnavigation.cfm">
+
 <div class="d-flex justify-content-center align-items-center loginMainContainer">
     <div class="loginCenter">
         <div class="leftContent">
@@ -19,6 +18,7 @@
 
         </div>
     </div>
+    
 </div>
 </body>
 </html>

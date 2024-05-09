@@ -43,5 +43,42 @@
         </cfquery>
         <cfreturn {"success":true,"message":"inserted!!"}>
     </cffunction>
+    <cffunction  name="savePage" access="remote" returnformat="json">
+        <cfargument  name="strTitle" required="true" type="string">
+        <cfargument  name="strFirstName" required="true" type="string">
+        <cfargument  name="strLastName" required="true" type="string">
+        <cfargument  name="strGender" required="true" type="string">
+        <cfargument  name="strBirthday" required="true" type="string">
+        <cfargument  name="strAddress" required="true" type="string">
+        <cfargument  name="strStreet" required="true" type="string">
+        <cfargument  name="intPincode" required="true" type="integer">
+        <cfargument  name="strEmailID" required="true" type="string">
+        <cfargument  name="intPhoneNumber" required="true" type="string">
+        <cfquery name="addToTable" datasource="demo">
+            INSERT INTO person(title,Fname,Lname,gender,dob,address,street,pincode,emailID,phone,userid)
+            VALUES (
+                <cfqueryparam value="#arguments.strTitle#" cfsqltype="cf_sql_varchar">,
+                <cfqueryparam value="#arguments.strFirstName#" cfsqltype="cf_sql_varchar">,
+                <cfqueryparam value="#arguments.strLastName#" cfsqltype="cf_sql_varchar">,
+                <cfqueryparam value="#arguments.strGender#" cfsqltype="cf_sql_varchar">,
+                <cfqueryparam value="#arguments.strBirthday#" cfsqltype="cf_sql_varchar">,
+                <cfqueryparam value="#arguments.strAddress#" cfsqltype="cf_sql_varchar">,                
+                <cfqueryparam value="#arguments.strStreet#" cfsqltype="cf_sql_varchar">,
+                <cfqueryparam value="#arguments.intPincode#" cfsqltype="cf_sql_integer">,                
+                <cfqueryparam value="#arguments.strEmailID#" cfsqltype="cf_sql_varchar">,
+                <cfqueryparam value="#arguments.intPhoneNumber#" cfsqltype="cf_sql_varchar">,
+                <cfqueryparam value=#session.userid# cfsqltype="cf_sql_integer">
+            )
+        </cfquery>
+        <cfreturn {"success":true,"message":"inserted!!"}>
+    </cffunction>
+    <cffunction  name="displayData" access="remote" returntype="query">
+        <cfargument  name="personid" required="false" type="integer">
+        <cfquery name="displayData" datasource="demo">
+            select Fname from person where personid=<cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">
+        </cfquery>
+        <cfreturn displayData>
+
+    </cffunction>
 
 </cfcomponent>

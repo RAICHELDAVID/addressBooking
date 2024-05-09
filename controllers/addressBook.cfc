@@ -1,9 +1,10 @@
 component{
     remote function doLogin(strUsername, strPassword) returnFormat="json" {
-        var userLogin = createObject("component", "models.addressBook").doLoginAuthenticate(strUsername, strPassword);
+        var local.userLogin = createObject("component", "models.addressBook").doLoginAuthenticate(strUsername, strPassword);
         
-        if (userLogin.recordCount eq 1) {
-            session.fullname = userLogin.fullname;
+        if (local.userLogin.recordCount eq 1) {
+            /*session.userid=local.userLogin.userid;*/
+            session.fullname = local.userLogin.fullname;
             return { "message": true };
         } else {
             return { "message": false };
@@ -68,6 +69,44 @@ component{
         session.login=false;
         cflocation(url="?action=login");
     }
+    remote function savePageValidation(strFirstName, strLastName,intPincode,strEmailID,intPhoneNumber) returnFormat="json" {
+        var local.regexPName='^[A-Za-z]+$';
+        var local.regexPin='^\d{6}$';
+        var local.regexPhone='^\d{10}$';
+        var regexEmail = '\w+@\w+\.\w{2,}';
+
+        var local.errors = [];
+            if (!reFind(local.regexPName, strFirstName)) {
+                arrayAppend(local.errors, "First Name should contain only alphabets.");
+            }
+            if (!reFind(local.regexPName, strLastName)) {
+                arrayAppend(local.errors, "Last Name should contain only alphabets.");
+            }
+
+            if (!reFind(local.regexPin, intPincode)) {
+                arrayAppend(local.errors, "pincode should be of 6 digits");
+            }
+            if (!reFind(local.regexPhone, intPhoneNumber)) {
+                arrayAppend(local.errors, "phone number contain only 10 digits");
+            }
+            if (!reFind(regexEmail, strEmailID)) {
+                arrayAppend(local.errors, "email id is in the format abc@abc.com");
+            }
+
+            
+        if (arrayLen(local.errors) > 0) {
+            return {
+                "success": false,
+                "message": local.errors
+            };
+        } else {
+            return {
+                "success": true,
+                "message": "Successful registration!"
+            };
+        }
+
 
 }  
+}
   

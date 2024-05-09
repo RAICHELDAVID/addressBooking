@@ -3,21 +3,30 @@
 
     switch(lcase(url.action)){
         case "login":
-            /*include "/controllers/readAction.cfm";*/
+            include "/views/header.cfm";
+            include "/views/Loginnavigation.cfm";
             include "/views/login.cfm";
             
         break;
         case "signup":
+            include "/views/header.cfm";
+            include "/views/Loginnavigation.cfm";
             include "/views/signup.cfm";
         break;
         case "listPage":
+            include "/views/header.cfm";
+            include "/views/homeNavigation.cfm";
             include "/views/listPage.cfm";
+            include "/controllers/addressBookAction.cfm";
         break;
+
 
         // The provided event could not be matched.
         default:
            // throw( type="InvalidEvent" );
            /* include "/controllers/readAction.cfm";*/
+                       include "/views/header.cfm";
+            include "/views/Loginnavigation.cfm";
             include "/views/login.cfm";
             
         break;

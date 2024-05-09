@@ -40,6 +40,7 @@ component
 	function onSessionStart(){
 		var session.login=false;
 		var session.fullname='';
+		var session.userid=0;
 		return( true );
 
 	}
