@@ -1,10 +1,11 @@
+
 <div class="listContainer"></div>
 <div class="d-flex">
 	<div class="leftSpace"></div>
 	<div class="d-flex justify-content-end printDiv">
 		<div class="d-flex justify-content-end listDiv">
-			<a href=""><img src="./assets/images/pdf.JPG" id="pdf" alt="pdf"></a>
-			<a href=""><img src="./assets/images/excel.JPG" id="pdf" alt="excel"></a>
+            <a href="?action=pdf" target="_blank"><img src="./assets/images/pdf.JPG" id="pdf" alt="pdf"></a>
+			<a href="?action=excel"><img src="./assets/images/excel.JPG" id="pdf" alt="excel"></a>
 			<a href=""><span class="material-symbols-outlined print">print</span></a>
 		</div>
 	</div>
@@ -105,7 +106,7 @@
 								<input type="" id="intPhoneNumber" name="intPhoneNumber" placeholder="Your Phone number">                        
 							</div>
 						</div>
-						<input type="hidden" name="personid" value="#personid#">
+						<input type="text" name="personid" value="#personid#">
 						<input type="submit" class="btn btn-primary" id="formBtn" value="submit">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CLOSE</button>
 					</form>
@@ -117,6 +118,7 @@
 			</div>
 		</div>
 	</div>
+
 	<div class="d-flex flex-column rightSection">
 		<cfoutput>
 			<table>
@@ -134,13 +136,40 @@
 							<td>#person.getFname()# #person.getLname()#</td>
 							<td>#person.getemailID()#</td>
 							<td>#person.getphone()#</td>
-						    <td><button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="##createModal" data-id="#person.getpersonid()#"><a href='?action=listPage&personid=#person.getpersonid()#' class="">EDIT</a></button></td>
+						    <td><button type="button" class="btn btn-outline-primary editModalBtn" personid="#person.getpersonid()#" data-target="##createModal" data-toggle="modal">EDIT</button></td>
+						    <td><button type="button" class="btn btn-outline-primary deleteLink" personid="#person.getpersonid()#">DELETE</button></td>
+							<td><button type="button" class="btn btn-outline-primary viewLink" personid="#person.getpersonid()#" data-target="##editModal" data-toggle="modal">VIEW</button></td>
+
 						</tr>
 					</cfloop>
 				</tbody>
 			</table>
 		</cfoutput>
+
+
+		<div class="modal" id="editModal">
+		<div class="modal-dialog">
+			<div class="modal-content flex-row">
+				<div class="modalLeft"></div>
+				<div class="modal-header">
+					<div class="modal-title-div">
+						<h4 class="modal-title">CONTACT DETAILS</h4>
+					</div>
+    	<div id="tableContainer"></div>
+
+
+				</div>
+				<div class="modal-footer">
+					<img src="./assets/images/user.JPG" id="user"  alt="user"> 
+				</div>
+			</div>
+		</div>
 	</div>
+
+
+	</div>
+	
 </div>
 </body>
 </html>
+

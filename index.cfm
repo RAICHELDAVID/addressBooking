@@ -17,8 +17,14 @@
             include "/views/header.cfm";
             include "/views/homeNavigation.cfm";
             include "/views/listPage.cfm";
-            include "/controllers/addressBookAction.cfm";
         break;
+        case "pdf":
+            include "/views/pdfDownload.cfm";
+        break;
+
+        case "excel":
+            include "/views/excelDownload.cfm";
+            break;
 
 
         // The provided event could not be matched.
