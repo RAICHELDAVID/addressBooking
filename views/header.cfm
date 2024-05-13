@@ -2,6 +2,8 @@
 <html>
 <head>
     <title>Address Booking</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+
     <link rel="icon" href="./assets/images/logo.png" type="image/png">
     <link rel="stylesheet" href="./assets/styles/fontgoogleapis.css">
     <link rel="stylesheet" href="./assets/styles/font-awesome.min.css">

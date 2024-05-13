@@ -292,3 +292,11 @@ select {
 	border: 1px solid #337ab7;
 	color: #337ab7;
 }
+
+.closeBtn {
+	border-radius: 19px;
+	width: 94px;
+	height: 38px;
+	background: #337ab7 !important;
+	color: white !important;
+}

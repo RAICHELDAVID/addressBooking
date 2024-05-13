@@ -1,35 +1,18 @@
-<cfcontent type="application/msexcel">
-<cfheader name="Content-Disposition" value="filename=filename.csv">
-<cfdocument format="csv">
-    <html>
-    <head>
-        <title>List of Data</title>
-    </head>
-    <body>
-        <h1>List of Data</h1>
+<cfoutput>
+    <cfset persons = EntityLoad("person")>
+    <cfset excelData = queryNew("Name, Email, Phone", "varchar, varchar, varchar")>
+    <cfloop array="#persons#" index="person">
+        <cfset name = person.getFname() & " " & person.getLname()>
+        <cfset email = person.getemailID()>
+        <cfset phone = person.getphone()>
+        <cfset queryAddRow(excelData, 1)>
+        <cfset querySetCell(excelData, "Name", name)>
+        <cfset querySetCell(excelData, "Email", email)>
+        <cfset querySetCell(excelData, "Phone", phone)>
+    </cfloop>
+</cfoutput>
+    <cfset excelFilePath = ExpandPath("./persons.xlsx")>
+    <cfspreadsheet action="write" filename="#excelFilePath#" query="excelData" sheetname="Persons">
+    <cfheader name="Content-Disposition" value="attachment; filename=persons.xlsx">
+    <cfcontent type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" file="#excelFilePath#" deleteFile="true">
 
-        <cfoutput>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone number</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <cfset persons = EntityLoad("person")>
-                    <cfloop array="#persons#" index="person">
-                        <tr>
-                            <td>#person.getFname()# #person.getLname()#</td>
-                            <td>#person.getemailID()#</td>
-                            <td>#person.getphone()#</td>
-                        </tr>
-                    </cfloop>
-                </tbody>
-            </table>
-        </cfoutput>
-
-    </body>
-    </html>
-</cfdocument>

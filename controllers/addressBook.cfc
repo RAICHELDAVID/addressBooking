@@ -3,7 +3,6 @@ component{
         var local.userLogin = createObject("component", "models.addressBook").doLoginAuthenticate(strUsername, strPassword);
         
         if (local.userLogin.recordCount eq 1) {
-            /*session.userid=local.userLogin.userid;*/
             session.fullname = local.userLogin.fullname;
             return { "message": true };
         } else {
@@ -92,21 +91,30 @@ component{
             if (!reFind(regexEmail, strEmailID)) {
                 arrayAppend(local.errors, "email id is in the format abc@abc.com");
             }
-
+            else if(personid<=0){
+                var variables.result = createObject("component", "models.addressBook").isEmailExist(strEmailID,intPhoneNumber);
+                if (variables.result.recordCount > 0) {
+                    
+                        if (variables.result.emailID == strEmailID) {
+                            arrayAppend(local.errors, "Emailid already exists.");
+                        }
+                    
+                }
+            }
             
-        if (arrayLen(local.errors) > 0) {
-            return {
+            if (arrayLen(local.errors) > 0) {
+                return {
                 "success": false,
                 "message": local.errors
-            };
-        } else {
-            return {
+                 };
+            } else {
+                return {
                 "success": true,
                 "message": "Successful registration!"
             };
-        }
+            }
 
 
-}  
+    }  
 }
   

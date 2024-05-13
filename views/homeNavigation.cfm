@@ -1,4 +1,4 @@
-<nav class="navbar">
+<nav class="navbar printNone">
   <div class="container-fluid navigationDiv">
     <div>
       <img src="./assets/images/logo.png" alt="Logo" width="45" height="45" class="d-inline-block align-text-top logoImage">
