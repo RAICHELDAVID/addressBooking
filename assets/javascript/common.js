@@ -1,12 +1,13 @@
+
 $(document).ready(function () {
    $('#loginBtn').click(function (e) {
       e.preventDefault();
       $("#message").empty().css("color", "");
 
-      var strUsername = $("#strUsername").val().trim();
+      var strEmail = $("#strEmail").val().trim();
       var strPassword = $("#strPassword").val().trim();
 
-      if (strUsername === '' || strPassword === '') {
+      if (strEmail === '' || strPassword === '') {
          $("#message").text('Username and password are required.').css("color", "red");
          return;
       }
@@ -16,7 +17,7 @@ $(document).ready(function () {
          url: "./controllers/addressBook.cfc?method=doLogin",
          dataType: "json",
          data: {
-            strUsername: strUsername,
+            strEmail: strEmail,
             strPassword: strPassword
          },
          success: function (response) {
@@ -95,28 +96,38 @@ $(document).ready(function () {
       var strStreet = $("#strStreet").val().trim();
       var intPincode = parseInt($("#intPincode").val().trim());
       var strEmailID = $("#strEmailID").val().trim();
-
+      
       var intPhoneNumber = parseInt($("#intPhoneNumber").val().trim());
+
       if (strTitle === '' || strFirstName === '' || strLastName === '' || strGender === '' || strBirthday === '' || strAddress === '' || strStreet === '' || intPincode === '' || strEmailID === '' || intPhoneNumber === '') {
          $("#validationMessage").text('All fields are required').css("color", "red");
          return false;
       }
+      var formData = new FormData();
+
+      formData.append('personid', personid);
+      formData.append('strTitle',  strTitle);
+      formData.append('strFirstName',strFirstName);
+      formData.append('strLastName',strLastName);      
+      formData.append('strGender', strGender);
+      formData.append('strBirthday', strBirthday);      
+      formData.append('strAddress', strAddress);
+      formData.append('strStreet', strStreet);      
+      formData.append('intPincode', intPincode);
+      formData.append('intPhoneNumber', intPhoneNumber);
+      formData.append('strEmailID', strEmailID);
+      formData.append('pictureFile', $('input[type=file]')[0].files[0]); 
 
       $.ajax({
          type: "POST",
          url: "./controllers/addressBook.cfc?method=savePageValidation",
+         data: formData,
+         processData: false,
+         contentType: false,
          dataType: "json",
-         data: {
-            strFirstName: strFirstName,
-            strLastName: strLastName,
-            intPincode: intPincode,
-            strEmailID: strEmailID,
-            intPhoneNumber: intPhoneNumber,
-            personid: personid
-         },
          success: function (response) {
-            if (response.success) {
-               savePage(personid, strTitle, strFirstName, strLastName, strGender, strBirthday, strAddress, strStreet, intPincode, strEmailID, intPhoneNumber)
+            if (response.success==true) {
+               savePage(personid, strTitle, strFirstName, strLastName, strGender, strBirthday, strAddress, strStreet, intPincode, strEmailID, intPhoneNumber,pictureFile)
 
             } else {
                $("#validationMessage").html(response.message.join('<br>')).css("color", "red");
@@ -127,10 +138,12 @@ $(document).ready(function () {
       return false;
    });
 
-   function savePage(personid, strTitle, strFirstName, strLastName, strGender, strBirthday, strAddress, strStreet, intPincode, strEmailID, intPhoneNumber) {
+   function savePage() {
       $.ajax({
          type: 'POST',
          url: "models/addressBook.cfc?method=savePage",
+         processData: false,
+         contentType: false,
          dataType: "json",
          data: {
             personid: personid,
@@ -143,7 +156,8 @@ $(document).ready(function () {
             strStreet: strStreet,
             intPincode: intPincode,
             strEmailID: strEmailID,
-            intPhoneNumber: intPhoneNumber
+            intPhoneNumber: intPhoneNumber,
+            pictureFile:pictureFile
          },
          success: function (response) {
 

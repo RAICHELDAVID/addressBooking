@@ -13,6 +13,7 @@
         property name="emailID";
         property name="phone";
         property name="image";
+        property name="userid";
 }
 </cfscript>
 

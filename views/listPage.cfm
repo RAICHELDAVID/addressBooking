@@ -73,7 +73,7 @@
 						<div class="d-flex justify-content-between mt-4 titleLabel">
 							<div class="d-flex flex-column">
 								<label>Upload Photo</label>
-								<input type="file" name="pictureFile" id="photoFile">                        
+								<input type="file" name="pictureFile" id="pictureFile">                      
 							</div>
 						</div>
 						<div class="mt-4 personContact">
@@ -122,6 +122,7 @@
 			<table>
 				<thead>
 					<tr>
+						<th></th>
 						<th>Name</th>
 						<th>Email</th>
 						<th>Phone number</th>
@@ -130,19 +131,23 @@
 				<tbody>
 					<cfset persons = EntityLoad("person")>
 					<cfloop array="#persons#" index="person">
-						<tr>
-							<cfif person.getGender() EQ "Male">
-                            	<td><img src="./assets/images/male_image.JPG" alt="Male" width="50" height="50"></td>
-                        	<cfelse>
-								<td><img src="./assets/images/female_image.JPG" alt="Female" width="50" height="50"></td>
-                        	</cfif>
-							<td>#person.getFname()# #person.getLname()#</td>
-							<td>#person.getemailID()#</td>
-							<td>#person.getphone()#</td>
-							<td class="printNone"><button type="button" class="btn btn-outline-primary editModalBtn" personid="#person.getpersonid()#" data-target="##createModal" data-toggle="modal">EDIT</button></td>
-							<td class="printNone"><button type="button" class="btn btn-outline-primary deleteLink" personid="#person.getpersonid()#">DELETE</button></td>
-							<td class="printNone"><button type="button" class="btn btn-outline-primary viewLink" personid="#person.getpersonid()#" data-target="##editModal" data-toggle="modal">VIEW</button></td>
-						</tr>
+						<cfif session.userid eq person.getuserid()>
+							<tr>
+								<cfif person.getGender() EQ "Male">
+									<td><img src="./assets/images/male_image.JPG" alt="Male" width="50" height="50"></td>
+								<cfelse>
+									<td><img src="./assets/images/female_image.JPG" alt="Female" width="50" height="50"></td>
+								</cfif>
+								<td>#person.getFname()# #person.getLname()#</td>
+								<td>#person.getemailID()#</td>
+								<td>#person.getphone()#</td>
+								<td class="printNone"><button type="button" class="btn btn-outline-primary editModalBtn" personid="#person.getpersonid()#" data-target="##createModal" data-toggle="modal">EDIT</button></td>
+								<td class="printNone"><button type="button" class="btn btn-outline-primary deleteLink" personid="#person.getpersonid()#">DELETE</button></td>
+								<td class="printNone"><button type="button" class="btn btn-outline-primary viewLink" personid="#person.getpersonid()#" data-target="##editModal" data-toggle="modal">VIEW</button></td>
+							</tr>
+						<cfelse>
+							<cfcontinue>	
+						</cfif>
 					</cfloop>
 				</tbody>
 			</table>

@@ -1,14 +1,15 @@
 
+
 <cfcomponent>
 
     <cffunction name="doLoginAuthenticate" access="public" returntype="query">
-        <cfargument name="strUsername" type="string" required="true">
+        <cfargument name="strEmail" type="string" required="true">
         <cfargument name="strPassword" type="string" required="true">
         <cfset var hashValue = hash(arguments.strPassword)>
         <cfquery name="getUser" datasource="demo">
-            SELECT username, password,fullname
+            SELECT emailID, password,fullname,userid
             FROM usertable
-            WHERE username = <cfqueryparam value="#arguments.strUsername#" cfsqltype="cf_sql_varchar">
+            WHERE emailID = <cfqueryparam value="#arguments.strEmail#" cfsqltype="cf_sql_varchar">
             AND password = <cfqueryparam value="#hashValue#" cfsqltype="cf_sql_varchar">
         </cfquery>
         <cfreturn getUser>
@@ -104,8 +105,11 @@
         <cfargument name="intPincode" required="true" type="integer">
         <cfargument name="strEmailID" required="true" type="string">
         <cfargument name="intPhoneNumber" required="true" type="string">
+         <cfargument name="pictureFile" required="true" type="any">
         <cfset var formattedDate = DateFormat(arguments.strBirthday, "dd-mm-yyyy")>
-
+        <cfset local.uploadPath = expandPath("../assets/uploads/")>
+        <cffile action="upload" destination="#local.uploadPath#" nameConflict="MakeUnique" filefield="pictureFile">
+        <cfset local.image = cffile.serverFile>
         <cftry>
             <cfif IsNumeric(arguments.personid) and arguments.personid gt 0>
                 <cfquery name="editPageQuery" datasource="demo">
@@ -120,13 +124,14 @@
                     street = <cfqueryparam value="#arguments.strStreet#" cfsqltype="cf_sql_varchar">,
                     pincode = <cfqueryparam value="#arguments.intPincode#" cfsqltype="cf_sql_integer">,                
                     emailID = <cfqueryparam value="#arguments.strEmailID#" cfsqltype="cf_sql_varchar">,
-                    phone = <cfqueryparam value="#arguments.intPhoneNumber#" cfsqltype="cf_sql_varchar">
+                    phone = <cfqueryparam value="#arguments.intPhoneNumber#" cfsqltype="cf_sql_varchar">,
+                    image = <cfqueryparam value="#local.image#" cfsqltype="cf_sql_varchar">,
                     WHERE personid = <cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">
                 </cfquery>
                 <cfreturn {"success": true, "message": "UPDATED!!"}>
             <cfelseif (arguments.personid eq 0)>
                 <cfquery name="addPageQuery" datasource="demo">
-                    INSERT INTO person(title, Fname, Lname, gender, [Date of Birth], address, street, pincode, emailID, phone, userid)
+                    INSERT INTO person(title, Fname, Lname, gender, [Date of Birth], address, street, pincode, emailID, phone,image, userid)
                     VALUES (
                         <cfqueryparam value="#arguments.strTitle#" cfsqltype="cf_sql_varchar">,
                         <cfqueryparam value="#arguments.strFirstName#" cfsqltype="cf_sql_varchar">,
@@ -138,6 +143,7 @@
                         <cfqueryparam value="#arguments.intPincode#" cfsqltype="cf_sql_integer">,                
                         <cfqueryparam value="#arguments.strEmailID#" cfsqltype="cf_sql_varchar">,
                         <cfqueryparam value="#arguments.intPhoneNumber#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#local.image#" cfsqltype="cf_sql_varchar">,
                         <cfqueryparam value="#session.userid#" cfsqltype="cf_sql_integer">
                     )
                 </cfquery>

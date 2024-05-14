@@ -1,8 +1,9 @@
 component{
-    remote function doLogin(strUsername, strPassword) returnFormat="json" {
-        var local.userLogin = createObject("component", "models.addressBook").doLoginAuthenticate(strUsername, strPassword);
+    remote function doLogin(strEmail, strPassword) returnFormat="json" {
+        var local.userLogin = createObject("component", "models.addressBook").doLoginAuthenticate(strEmail, strPassword);
         
         if (local.userLogin.recordCount eq 1) {
+            session.userid=local.userLogin.userid;
             session.fullname = local.userLogin.fullname;
             return { "message": true };
         } else {
