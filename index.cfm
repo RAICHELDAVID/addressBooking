@@ -13,7 +13,7 @@
             include "/views/Loginnavigation.cfm";
             include "/views/signup.cfm";
         break;
-        case "listPage":
+       case "listPage":
             include "/views/header.cfm";
             include "/views/homeNavigation.cfm";
             include "/views/listPage.cfm";

@@ -12,6 +12,7 @@
             <table>
                 <thead>
                     <tr>
+                    <th></th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Phone number</th>
@@ -20,11 +21,16 @@
                 <tbody>
                     <cfset persons = EntityLoad("person")>
                     <cfloop array="#persons#" index="person">
+                    <cfif session.userid eq person.getuserid()>
                         <tr>
+								<td><img src="./assets/uploads/#person.getimage()#" alt="image" width="50" height="50"></td>
                             <td>#person.getFname()# #person.getLname()#</td>
                             <td>#person.getemailID()#</td>
                             <td>#person.getphone()#</td>
                         </tr>
+                        <cfelse>
+							<cfcontinue>	
+						</cfif>
                     </cfloop>
                 </tbody>
             </table>

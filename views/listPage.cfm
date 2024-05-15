@@ -14,7 +14,7 @@
 <div class="d-flex mainContainer">
 	<div class="d-flex flex-column leftSection ">
 		<div class="printNone"> 
-			<img src="./assets/images/user.JPG" id="user"  alt="user">
+			<img src="./assets/images/user.JPG" id="userImage"  alt="user">
 		</div>
 		<div class="printNone">
 			<p>
@@ -112,7 +112,7 @@
 					<p id="validationMessage"></p>
 				</div>
 				<div class="modal-footer">
-					<img src="./assets/images/user.JPG" id="user"  alt="user"> 
+					<img src="./assets/images/user.JPG" id="userImageEdit" width="100" height="100"  alt="user"> 
 				</div>
 			</div>
 		</div>
@@ -133,11 +133,7 @@
 					<cfloop array="#persons#" index="person">
 						<cfif session.userid eq person.getuserid()>
 							<tr>
-								<cfif person.getGender() EQ "Male">
-									<td><img src="./assets/images/male_image.JPG" alt="Male" width="50" height="50"></td>
-								<cfelse>
-									<td><img src="./assets/images/female_image.JPG" alt="Female" width="50" height="50"></td>
-								</cfif>
+								<td><img src="./assets/uploads/#person.getimage()#" alt="image" width="50" height="50"></td>
 								<td>#person.getFname()# #person.getLname()#</td>
 								<td>#person.getemailID()#</td>
 								<td>#person.getphone()#</td>
@@ -166,8 +162,9 @@
                 		</div>
 					</div>
 					<div class="modal-footer">
-						<img src="./assets/images/user.JPG" id="user"  alt="user"> 
+    					<img src="" id="userImageView" alt="User Image" width="100" height="100">
 					</div>
+
 				</div>
 				
 			</div>

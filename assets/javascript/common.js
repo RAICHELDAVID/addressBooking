@@ -96,7 +96,6 @@ $(document).ready(function () {
       var strStreet = $("#strStreet").val().trim();
       var intPincode = parseInt($("#intPincode").val().trim());
       var strEmailID = $("#strEmailID").val().trim();
-      
       var intPhoneNumber = parseInt($("#intPhoneNumber").val().trim());
 
       if (strTitle === '' || strFirstName === '' || strLastName === '' || strGender === '' || strBirthday === '' || strAddress === '' || strStreet === '' || intPincode === '' || strEmailID === '' || intPhoneNumber === '') {
@@ -127,7 +126,7 @@ $(document).ready(function () {
          dataType: "json",
          success: function (response) {
             if (response.success==true) {
-               savePage(personid, strTitle, strFirstName, strLastName, strGender, strBirthday, strAddress, strStreet, intPincode, strEmailID, intPhoneNumber,pictureFile)
+               savePage(formData);
 
             } else {
                $("#validationMessage").html(response.message.join('<br>')).css("color", "red");
@@ -138,27 +137,14 @@ $(document).ready(function () {
       return false;
    });
 
-   function savePage() {
+   function savePage(formData) {
       $.ajax({
          type: 'POST',
          url: "models/addressBook.cfc?method=savePage",
          processData: false,
          contentType: false,
          dataType: "json",
-         data: {
-            personid: personid,
-            strTitle: strTitle,
-            strFirstName: strFirstName,
-            strLastName: strLastName,
-            strGender: strGender,
-            strBirthday: strBirthday,
-            strAddress: strAddress,
-            strStreet: strStreet,
-            intPincode: intPincode,
-            strEmailID: strEmailID,
-            intPhoneNumber: intPhoneNumber,
-            pictureFile:pictureFile
-         },
+         data: formData,
          success: function (response) {
 
             if (response.success == true) {
@@ -179,15 +165,11 @@ $(document).ready(function () {
    }
    $('.createBtn').click(function (e) {
       e.preventDefault();
-
-      var formData = {};
-      $("#formID :input").each(function () {
-         formData[$(this).attr('strFirstName')] = $(this).val();
-      });
-
       $("#formID").get(0).reset();
-
-   });
+      $('#userImageEdit').attr('src', './assets/images/user.JPG'); 
+      
+  });
+  
 
    $('.editModalBtn').click(function (e) {
       e.preventDefault();
@@ -201,6 +183,7 @@ $(document).ready(function () {
          dataType: "json",
          success: function (response) {
             if (response) {
+               console.log(response.dob);
                $('#modalTitle').text('EDIT CONTACT')
                $('#personid').val(response.personid);
                $('#strTitle').val(response.title);
@@ -213,16 +196,13 @@ $(document).ready(function () {
                $('#intPincode').val(response.pincode);
                $('#strEmailID').val(response.emailID);
                $('#intPhoneNumber').val(response.phone);
+               
+               $('#userImageEdit').attr('src','./assets/uploads/'+response.image);
             }
-
-         },
-
+         }
       });
-
-
    });
-
-
+   
    $('.deleteLink').click(function (e) {
       e.preventDefault();
       var personid = $(this).attr('personid');
@@ -245,40 +225,35 @@ $(document).ready(function () {
       }
       return false;
    });
-
    $('.viewLink').click(function (e) {
       e.preventDefault();
       var personid = $(this).attr('personid');
       $.ajax({
-         type: "POST",
-         url: "./models/addressBook.cfc?method=displayData",
-         data: {
-            personid: personid
-         },
-         dataType: "json",
-         success: function (response) {
-            var tableHtml = "<table>";
-            $.each(response.COLUMNS, function (index, columnName) {
-               tableHtml += "<tr>";
-               tableHtml += "<th>" + columnName + "</th>";
-               $.each(response.DATA, function (rowIndex, dataRow) {
-                  tableHtml += "<td>" + dataRow[index] + "</td>";
-               });
-               tableHtml += "</tr>";
-            });
-            tableHtml += "</table>";
-
-            $("#tableContainer").html(tableHtml);
-
-         },
-         error: function (xhr, textStatus, errorThrown) {
-            console.error("Error:", errorThrown);
-         }
+          type: "POST",
+          url: "./models/addressBook.cfc?method=displayData",
+          data: {
+              personid: personid
+          },
+          dataType: "json",
+          success: function (response) {
+              var imageUrl = './assets/uploads/' + response.DATA[0][7]; 
+              $('#userImageView').attr('src', imageUrl);
+              var tableHtml = "<table>";
+              $.each(response.COLUMNS, function (index, columnName) {
+               
+                  tableHtml += "<tr>";
+                  tableHtml += "<th>" + columnName + "</th>";
+                  tableHtml += "<td>" + response.DATA[0][index] + "</td>";
+                  tableHtml += "</tr>";
+              });
+              tableHtml += "</table>";
+              $("#tableContainer").html(tableHtml);
+          },
+          error: function (xhr, textStatus, errorThrown) {
+              console.error("Error:", errorThrown);
+          }
       });
-
-   });
-
-
+  });
    $('#print').click(function () {
       printContent('landscape');
    });
@@ -299,7 +274,6 @@ $(document).ready(function () {
       font-size: x-large;
     }
   `;
-
       var style = document.createElement('style');
       style.media = 'print';
       if (style.styleSheet) {
@@ -313,4 +287,49 @@ $(document).ready(function () {
 
       window.print();
    }
+   /*$("#googleIcon").click(function() {
+      // This function is triggered when the element with ID "googleIcon" is clicked
+      
+      // Google OAuth 2.0 client ID
+      const clientId = '678283113676-2jr700ekm9hq9akpcmr01n4qto8f67b2.apps.googleusercontent.com';
+      
+      // Redirect URI where Google will redirect after authentication
+      const redirectUri = 'http://127.0.0.1:8500/address%20booking/addressBooking/index.cfm?action=listPage';
+      
+      // Constructing the authorization URL for Google OAuth
+      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=token&client_id=${clientId}&redirect_uri=${redirectUri}&scope=profile%20email&state=123`;
+  
+      // Redirect the user to the authorization URL
+      window.location.href = authUrl;
+  });*/
+  function handleCredentialResponse(response) {
+   console.log("Encoded JWT ID token: " + response.credential);
+   $.ajax({
+     url: './controllers/addressBook.cfc?method=verify',
+     type: 'POST',
+     contentType: 'application/json',
+     data: JSON.stringify({ token: response.credential }),
+     success: function (response) {
+       if (response.success) {
+         window.location.href = '?action=listPage';
+       } else {
+         console.error('Login failed');
+       }
+     },
+     error: function () {
+       console.error('Login failed');
+     }
+   });
+ }
+
+ google.accounts.id.initialize({
+   client_id: '678283113676-2jr700ekm9hq9akpcmr01n4qto8f67b2.apps.googleusercontent.com',
+   callback: handleCredentialResponse
+ });
+
+ $('#googleIcon').click(function () {
+   google.accounts.id.prompt();
+ });
+
+  
 });

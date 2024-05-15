@@ -114,8 +114,32 @@ component{
                 "message": "Successful registration!"
             };
             }
-
-
     }  
+     remote struct function verify(required string token) {
+    var result = { success = false, message = "" };
+    var googleClientId = "678283113676-2jr700ekm9hq9akpcmr01n4qto8f67b2.apps.googleusercontent.com";
+    var googleApiUrl = "https://oauth2.googleapis.com/tokeninfo?id_token=" & token;
+    var httpResponse = {};
+
+    httpResponse = http method="get" url=googleApiUrl;
+
+    if (httpResponse.statusCode == 200) {
+      var response = deserializeJSON(httpResponse.fileContent);
+      
+      if (response.aud == googleClientId) {
+        result.success = true;
+        result.message = "Login successful";
+        
+        
+      } else {
+        result.message = "Invalid token audience";
+      }
+    } else {
+      result.message = "Token verification failed";
+    }
+    writeDump(result);
+    
+    return result;
+  }
 }
   
