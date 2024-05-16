@@ -23,6 +23,28 @@
 		</div>
 		<div class="printNone">
 			<button type="button" class="btn btn-primary createBtn"  data-toggle="modal" data-target="#createModal">CREATE CONTACT</button>
+			<button type="button" class="btn btn-primary upload"  data-toggle="modal" data-target="#uploadModal">UPLOAD EXCEL</button>
+		</div>
+	</div>
+	<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div>
+					<h5 class="modal-title text-center mt-3" id="exampleModalLabel">UPLOAD EXCEL</h5>
+				</div>
+				<div class="modal-body">
+					<form action="index.cfm?action=listPage" method="post" enctype="multipart/form-data" id="formUpload">
+						<div class="d-flex flex-column">
+							<label>Upload File</label>
+							<input type="file" class="mt-3" name="excelFile" id="excelFile">                      
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary uploadBtn">UPLOAD</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="modal" id="createModal">
@@ -32,6 +54,7 @@
 				<div class="modal-header">
 					<div class="modal-title-div">
 						<h4 class="modal-title" id="modalTitle">CREATE CONTACT</h4>
+						
 					</div>
 					<form action="index.cfm?action=listPage" method="post" enctype="multipart/form-data" id="formID">
 						<div class="mt-4 personContact">
@@ -92,7 +115,7 @@
 						<div class="d-flex justify-content-between mt-4 titleLabel">
 							<div class="d-flex flex-column">
 								<label>Pincode *</label>
-								<input type="text" id="intPincode" name="intPincode" placeholder="Your pincode">
+								<input type="text" id="intPincode" name="intPincode" maxlength="6" placeholder="Your pincode">
 							</div>
 						</div>
 						<div class="d-flex justify-content-between mt-4 titleLabel">
@@ -102,7 +125,7 @@
 							</div>
 							<div class="d-flex flex-column">
 								<label>Phone number *</label>
-								<input type="" id="intPhoneNumber" name="intPhoneNumber" placeholder="Your Phone number">                        
+								<input type="" id="intPhoneNumber" name="intPhoneNumber" maxlength="10" placeholder="Your Phone number">                        
 							</div>
 						</div>
 						<input type="hidden" name="personid" id="personid" value="0">

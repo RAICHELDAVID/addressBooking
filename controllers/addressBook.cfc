@@ -93,13 +93,11 @@ component{
                 arrayAppend(local.errors, "email id is in the format abc@abc.com");
             }
             else if(personid<=0){
-                var variables.result = createObject("component", "models.addressBook").isEmailExist(strEmailID,intPhoneNumber);
+                var variables.result = createObject("component", "models.addressBook").isEmailExist(strEmailID);
                 if (variables.result.recordCount > 0) {
-                    
                         if (variables.result.emailID == strEmailID) {
                             arrayAppend(local.errors, "Emailid already exists.");
                         }
-                    
                 }
             }
             
@@ -115,7 +113,7 @@ component{
             };
             }
     }  
-     remote struct function verify(required string token) {
+    remote struct function verify(required string token) {
     var result = { success = false, message = "" };
     var googleClientId = "678283113676-2jr700ekm9hq9akpcmr01n4qto8f67b2.apps.googleusercontent.com";
     var googleApiUrl = "https://oauth2.googleapis.com/tokeninfo?id_token=" & token;
@@ -141,5 +139,6 @@ component{
     
     return result;
   }
+
 }
   

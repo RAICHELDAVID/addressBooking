@@ -53,7 +53,9 @@
     <cffunction  name="isEmailExist" returntype="query">
         <cfargument  name="strEmailID" required="true" type="string">
         <cfquery name="getEmail" datasource="demo">
-            SELECT emailID,phone FROM person
+            SELECT emailID FROM person
+            WHERE emailID=<cfqueryparam value="#arguments.strEmailID#" cfsqltype="cf_sql_varchar"> UNION
+            SELECT emailID FROM usertable
             WHERE emailID=<cfqueryparam value="#arguments.strEmailID#" cfsqltype="cf_sql_varchar">
         </cfquery>
         <cfreturn getEmail>
@@ -162,5 +164,11 @@
             </cfquery>
             <cfreturn {"success": true, "message": "Inserted!!"}>
         </cfif>
+    </cffunction>
+
+    <cffunction  name="excelFile" access="remote" returnformat="json">
+        <cfargument  name="excelFile" required="true" type="any">
+        
+
     </cffunction>
 </cfcomponent>

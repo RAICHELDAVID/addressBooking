@@ -287,21 +287,7 @@ $(document).ready(function () {
 
       window.print();
    }
-   /*$("#googleIcon").click(function() {
-      // This function is triggered when the element with ID "googleIcon" is clicked
-      
-      // Google OAuth 2.0 client ID
-      const clientId = '678283113676-2jr700ekm9hq9akpcmr01n4qto8f67b2.apps.googleusercontent.com';
-      
-      // Redirect URI where Google will redirect after authentication
-      const redirectUri = 'http://127.0.0.1:8500/address%20booking/addressBooking/index.cfm?action=listPage';
-      
-      // Constructing the authorization URL for Google OAuth
-      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=token&client_id=${clientId}&redirect_uri=${redirectUri}&scope=profile%20email&state=123`;
-  
-      // Redirect the user to the authorization URL
-      window.location.href = authUrl;
-  });*/
+
   function handleCredentialResponse(response) {
    console.log("Encoded JWT ID token: " + response.credential);
    $.ajax({
@@ -330,6 +316,22 @@ $(document).ready(function () {
  $('#googleIcon').click(function () {
    google.accounts.id.prompt();
  });
+
+
+
+   $('.uploadBtn').click(function (e){
+      e.preventDefault();
+      var excelFile = $('#excelFile')[0].files[0];
+      $.ajax({
+         type:'post',
+         url:'./models/addressBook.cfc?method=excelRead',
+         data:excelFile,
+         datatype:'json',
+         success:function(response){
+
+         }
+      });
+   });
 
   
 });
