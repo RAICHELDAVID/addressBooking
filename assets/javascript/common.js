@@ -115,7 +115,8 @@ $(document).ready(function () {
       formData.append('intPincode', intPincode);
       formData.append('intPhoneNumber', intPhoneNumber);
       formData.append('strEmailID', strEmailID);
-      formData.append('pictureFile', $('input[type=file]')[0].files[0]); 
+      formData.append('pictureFile', $('#pictureFile')[0].files[0]); 
+      
 
       $.ajax({
          type: "POST",
@@ -183,7 +184,6 @@ $(document).ready(function () {
          dataType: "json",
          success: function (response) {
             if (response) {
-               console.log(response.dob);
                $('#modalTitle').text('EDIT CONTACT')
                $('#personid').val(response.personid);
                $('#strTitle').val(response.title);
@@ -288,7 +288,7 @@ $(document).ready(function () {
       window.print();
    }
 
-  function handleCredentialResponse(response) {
+ /* function handleCredentialResponse(response) {
    console.log("Encoded JWT ID token: " + response.credential);
    $.ajax({
      url: './controllers/addressBook.cfc?method=verify',
@@ -316,22 +316,43 @@ $(document).ready(function () {
  $('#googleIcon').click(function () {
    google.accounts.id.prompt();
  });
+*/
+
+$('#googleIcon').click(function(){
+   var oauth2Endpoint="https://accounts.google.com/o/oauth2/v2/auth";
+   $form = $('<form></form>');
+   $form.attr({
+      'method':'GET',
+      'action':'oauth2Endpoint'
+   })
+
+});
 
 
+ $('.uploadBtn').click(function (e) {
+   e.preventDefault();
+   var excelFile = $('#excelFile')[0].files[0];
+   var formData = new FormData();
+   formData.append('excelFile', excelFile);
+   $.ajax({
+       type: 'post',
+       url: './models/addressBook.cfc?method=excelRead',
+       data: formData,
+       contentType: false,
+       processData: false,
+       dataType: 'json',
+       success: function (response) {
+           if (response.success) {
+               $('#validationMessage').text(response.message).css("color", "green");
+               setTimeout(function () {
+                   window.location.href = "?action=listPage";
+               }, 1000);
+           }
+       }
+   });
+});
 
-   $('.uploadBtn').click(function (e){
-      e.preventDefault();
-      var excelFile = $('#excelFile')[0].files[0];
-      $.ajax({
-         type:'post',
-         url:'./models/addressBook.cfc?method=excelRead',
-         data:excelFile,
-         datatype:'json',
-         success:function(response){
-
-         }
-      });
    });
 
   
-});
+

@@ -166,9 +166,55 @@
         </cfif>
     </cffunction>
 
-    <cffunction  name="excelFile" access="remote" returnformat="json">
+    -<cffunction  name="excelRead" access="remote" returnformat="json">
         <cfargument  name="excelFile" required="true" type="any">
-        
+        <cfset local.path = ExpandPath("../assets/uploads/")>
+        <cffile  action="upload"  destination="#local.path#" nameconflict='makeunique'>
+        <cfset local.uploadFile=cffile.serverDirectory & "/" & cffile.serverFile>
+        <cfspreadsheet  action="read" src="#local.uploadFile#" query="excelData" headerrow="1"  rows='2'>
 
+        <cfquery datasource="demo">
+            <cfloop query="excelData">
+                <cfset local.title = excelData.Title>
+                <cfset local.firstName = excelData.firstname>
+                <cfset local.lastName = excelData.lastname>
+                <cfset local.gender = excelData.gender>
+                <cfset local.dob = excelData.dob>
+                <cfset local.address = excelData.address>
+                <cfset local.street = excelData.street>
+                <cfset local.pincode = excelData.pincode>
+                <cfset local.emailID = excelData.emailID>
+                <cfset local.phone = excelData.phone>
+                <cfset local.image = excelData.image>
+                <cfqueryparam value="#excelData.Title#" cfsqltype="cf_sql_varchar">
+                <cfqueryparam value="#excelData.firstname#" cfsqltype="cf_sql_varchar">
+                <cfqueryparam value="#excelData.lastname#" cfsqltype="cf_sql_varchar">
+                <cfqueryparam value="#excelData.gender#" cfsqltype="cf_sql_varchar">
+                <cfqueryparam value="#excelData.dob#" cfsqltype="cf_sql_varchar">
+                <cfqueryparam value="#excelData.address#" cfsqltype="cf_sql_varchar">
+                <cfqueryparam value="#excelData.street#" cfsqltype="cf_sql_varchar">
+                <cfqueryparam value="#excelData.pincode#" cfsqltype="cf_sql_integer">
+                <cfqueryparam value="#excelData.emailID#" cfsqltype="cf_sql_varchar">
+                <cfqueryparam value="#excelData.phone#" cfsqltype="cf_sql_varchar">
+                <cfqueryparam value="#excelData.image#" cfsqltype="cf_sql_varchar">
+                INSERT INTO person (title,Fname,Lname,gender,[Date of Birth],address,street,pincode,emailID,phone,image,userid)
+                VALUES (
+                    <cfqueryparam value="#excelData.Title#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#excelData.firstname#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#excelData.lastname#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#excelData.gender#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#excelData.dob#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#excelData.address#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#excelData.street#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#excelData.pincode#" cfsqltype="cf_sql_integer">,
+                    <cfqueryparam value="#excelData.emailID#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#excelData.phone#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#excelData.image#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#sesion.userid#" cfsqltype="cf_sql_integer">
+                )
+            </cfloop>
+        </cfquery>
+        
+        <cfreturn {"success": true, "message": "INSERTED"}>
     </cffunction>
 </cfcomponent>

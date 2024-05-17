@@ -112,7 +112,8 @@ component{
                 "message": "Successful registration!"
             };
             }
-    }  
+    }
+
     remote struct function verify(required string token) {
     var result = { success = false, message = "" };
     var googleClientId = "678283113676-2jr700ekm9hq9akpcmr01n4qto8f67b2.apps.googleusercontent.com";
