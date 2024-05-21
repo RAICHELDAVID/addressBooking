@@ -5,6 +5,8 @@ component{
         if (local.userLogin.recordCount eq 1) {
             session.userid=local.userLogin.userid;
             session.fullname = local.userLogin.fullname;
+            session.sso=false;
+            session.image=local.userLogin.image;
             return { "message": true };
         } else {
             return { "message": false };
@@ -59,16 +61,21 @@ component{
         } else {
             return {
                 "success": true,
-                "message": "Successful registration!"
+                "message": "valid Data!"
             };
         }
+    }
+    
+    public void function login(){
+        session.login=true;
     }
 
     remote void function logout(){
         structDelete(session,"login");
         session.login=false;
-        cflocation(url="?action=login");
+        cflocation(url="../?action=login");
     }
+
     remote function savePageValidation(strFirstName, strLastName,intPincode,strEmailID,intPhoneNumber) returnFormat="json" {
         var local.regexPName='^[A-Za-z]+$';
         var local.regexPin='^\d{6}$';
@@ -114,32 +121,31 @@ component{
             }
     }
 
-    remote struct function verify(required string token) {
-    var result = { success = false, message = "" };
-    var googleClientId = "678283113676-2jr700ekm9hq9akpcmr01n4qto8f67b2.apps.googleusercontent.com";
-    var googleApiUrl = "https://oauth2.googleapis.com/tokeninfo?id_token=" & token;
-    var httpResponse = {};
-
-    httpResponse = http method="get" url=googleApiUrl;
-
-    if (httpResponse.statusCode == 200) {
-      var response = deserializeJSON(httpResponse.fileContent);
-      
-      if (response.aud == googleClientId) {
-        result.success = true;
-        result.message = "Login successful";
-        
-        
-      } else {
-        result.message = "Invalid token audience";
-      }
-    } else {
-      result.message = "Token verification failed";
-    }
-    writeDump(result);
-    
-    return result;
-  }
-
+    remote any function googleLogin(emailID,name,image) returnFormat="json" {
+        variables.result = createObject("component","models.addressBook");
+        local.googleLogin=variables.result.googleLogin(emailID);
+        if (local.googleLogin.recordCount) {
+            session.login = true;
+            session.sso = true;
+            session.fullname=local.googleLogin.fullname;
+            session.image = local.googleLogin.image;
+            session.userid=local.googleLogin.userid;
+            return { "success": true };
+        } 
+        else {
+            local.saveSSO=variables.result.saveSSO(emailID,name,image);
+            if(local.saveSSO.success){
+                local.googleLogin=variables.result.googleLogin(emailID);
+                if (local.googleLogin.success) {
+                    session.login = true;
+                    session.sso = true;
+                    session.fullname=local.googleLogin.fullName;
+                    session.image = local.googleLogin.img;
+                    session.userid=local.googleLogin.id;
+                }
+                return {"success":true};  
+            }
+        }
+    } 
 }
   

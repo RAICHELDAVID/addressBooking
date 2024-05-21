@@ -1,13 +1,10 @@
-
-
 <cfcomponent>
-
     <cffunction name="doLoginAuthenticate" access="public" returntype="query">
         <cfargument name="strEmail" type="string" required="true">
         <cfargument name="strPassword" type="string" required="true">
         <cfset var hashValue = hash(arguments.strPassword)>
         <cfquery name="getUser" datasource="demo">
-            SELECT emailID, password,fullname,userid
+            SELECT emailID, password,fullname,userid,image
             FROM usertable
             WHERE emailID = <cfqueryparam value="#arguments.strEmail#" cfsqltype="cf_sql_varchar">
             AND password = <cfqueryparam value="#hashValue#" cfsqltype="cf_sql_varchar">
@@ -67,18 +64,23 @@
         <cfargument  name="strUsername" required="true" type="string">
         <cfargument  name="strPassword" required="true" type="string">
         <cfargument  name="strConfirmPassword" required="true" type="string">
+        <cfargument name="adminPictureFile" required="true" type="any">
         <cfset local.hashedPassword=hash(arguments.strPassword)>
+        <cfset local.uploadPath = expandPath("../assets/uploads/")>
+        <cffile action="upload" destination="#local.uploadPath#" nameConflict="MakeUnique" filefield="adminPictureFile">
+        <cfset local.image = cffile.serverFile>
         <cfquery name="addToTable" datasource="demo">
-            INSERT INTO usertable(fullname,emailID,username,password,confirmpassword)
+            INSERT INTO usertable(fullname,emailID,username,password,confirmpassword,image)
             VALUES (
                 <cfqueryparam value="#arguments.strName#" cfsqltype="cf_sql_varchar">,
                 <cfqueryparam value="#arguments.strEmail#" cfsqltype="cf_sql_varchar">,
                 <cfqueryparam value="#arguments.strUsername#" cfsqltype="cf_sql_varchar">,
                 <cfqueryparam value="#local.hashedPassword#" cfsqltype="cf_sql_varchar">,
-                <cfqueryparam value="#local.hashedPassword#" cfsqltype="cf_sql_varchar">
+                <cfqueryparam value="#local.hashedPassword#" cfsqltype="cf_sql_varchar">,
+                <cfqueryparam value="#local.image#" cfsqltype="cf_sql_varchar">
             )
         </cfquery>
-        <cfreturn {"success":true,"message":"inserted!!"}>
+        <cfreturn {"success":true,"message":"Successful registration"}>
     </cffunction>
 
     <cffunction name="displayData" access="remote" returnformat="json">
@@ -166,14 +168,14 @@
         </cfif>
     </cffunction>
 
-    -<cffunction  name="excelRead" access="remote" returnformat="json">
-        <cfargument  name="excelFile" required="true" type="any">
+    <cffunction name="excelRead" access="remote" returnformat="json">
+        <cfargument name="excelFile" required="true" type="any">
         <cfset local.path = ExpandPath("../assets/uploads/")>
-        <cffile  action="upload"  destination="#local.path#" nameconflict='makeunique'>
-        <cfset local.uploadFile=cffile.serverDirectory & "/" & cffile.serverFile>
-        <cfspreadsheet  action="read" src="#local.uploadFile#" query="excelData" headerrow="1"  rows='2'>
-
-        <cfquery datasource="demo">
+        <cffile action="upload" destination="#local.path#" nameconflict='makeunique'>
+        <cfset local.uploadFile = cffile.serverDirectory & "/" & cffile.serverFile>
+        <cfspreadsheet action="read" src="#local.uploadFile#" query="excelData" headerrow="1" rows='2-100'>
+        <cfset local.insertedCount = 0>
+        <cfset local.skippedCount = 0>
             <cfloop query="excelData">
                 <cfset local.title = excelData.Title>
                 <cfset local.firstName = excelData.firstname>
@@ -186,35 +188,56 @@
                 <cfset local.emailID = excelData.emailID>
                 <cfset local.phone = excelData.phone>
                 <cfset local.image = excelData.image>
-                <cfqueryparam value="#excelData.Title#" cfsqltype="cf_sql_varchar">
-                <cfqueryparam value="#excelData.firstname#" cfsqltype="cf_sql_varchar">
-                <cfqueryparam value="#excelData.lastname#" cfsqltype="cf_sql_varchar">
-                <cfqueryparam value="#excelData.gender#" cfsqltype="cf_sql_varchar">
-                <cfqueryparam value="#excelData.dob#" cfsqltype="cf_sql_varchar">
-                <cfqueryparam value="#excelData.address#" cfsqltype="cf_sql_varchar">
-                <cfqueryparam value="#excelData.street#" cfsqltype="cf_sql_varchar">
-                <cfqueryparam value="#excelData.pincode#" cfsqltype="cf_sql_integer">
-                <cfqueryparam value="#excelData.emailID#" cfsqltype="cf_sql_varchar">
-                <cfqueryparam value="#excelData.phone#" cfsqltype="cf_sql_varchar">
-                <cfqueryparam value="#excelData.image#" cfsqltype="cf_sql_varchar">
-                INSERT INTO person (title,Fname,Lname,gender,[Date of Birth],address,street,pincode,emailID,phone,image,userid)
-                VALUES (
-                    <cfqueryparam value="#excelData.Title#" cfsqltype="cf_sql_varchar">,
-                    <cfqueryparam value="#excelData.firstname#" cfsqltype="cf_sql_varchar">,
-                    <cfqueryparam value="#excelData.lastname#" cfsqltype="cf_sql_varchar">,
-                    <cfqueryparam value="#excelData.gender#" cfsqltype="cf_sql_varchar">,
-                    <cfqueryparam value="#excelData.dob#" cfsqltype="cf_sql_varchar">,
-                    <cfqueryparam value="#excelData.address#" cfsqltype="cf_sql_varchar">,
-                    <cfqueryparam value="#excelData.street#" cfsqltype="cf_sql_varchar">,
-                    <cfqueryparam value="#excelData.pincode#" cfsqltype="cf_sql_integer">,
-                    <cfqueryparam value="#excelData.emailID#" cfsqltype="cf_sql_varchar">,
-                    <cfqueryparam value="#excelData.phone#" cfsqltype="cf_sql_varchar">,
-                    <cfqueryparam value="#excelData.image#" cfsqltype="cf_sql_varchar">,
-                    <cfqueryparam value="#sesion.userid#" cfsqltype="cf_sql_integer">
-                )
+                <cfset local.emailExistQuery = isEmailExist(local.emailID)>
+                <cfif local.emailExistQuery.recordCount eq 0>
+                <cfquery datasource="demo">
+                    INSERT INTO person (title, Fname, Lname, gender, [Date of Birth], address, street, pincode, emailID, phone, image, userid)
+                    VALUES (
+                        <cfqueryparam value="#local.title#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#local.firstName#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#local.lastName#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#local.gender#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#local.dob#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#local.address#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#local.street#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#local.pincode#" cfsqltype="cf_sql_integer">,
+                        <cfqueryparam value="#local.emailID#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#local.phone#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#local.image#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#session.userid#" cfsqltype="cf_sql_integer">
+                    )
+                    </cfquery>
+                    <cfset local.insertedCount++>
+                <cfelse>
+                    <cfset local.skippedCount++>
+                    <cfcontinue>
+                </cfif>
             </cfloop>
+            <cfreturn {"success": true, "message": "#local.insertedCount# rows inserted, #local.skippedCount# rows skipped due to duplicate emails."}>
+    </cffunction>
+
+    <cffunction name="googleLogin" access="remote" returnType="query">
+        <cfargument name="emailID" required="true" type="string">
+        <cfquery name="googleLogin" datasource="demo">
+            select userid,fullname,emailID,username,password,image 
+            from usertable
+            where emailID=<cfqueryparam value="#arguments.emailID#" cfsqltype="cf_sql_varchar">
         </cfquery>
-        
-        <cfreturn {"success": true, "message": "INSERTED"}>
+        <cfreturn googleLogin>
+    </cffunction>
+
+    <cffunction  name="saveSSO" access="remote"  returnformat="json">
+        <cfargument name = "emailID" required="true" returnType="string">
+        <cfargument name = "name" required="true" returnType="string">
+        <cfargument name = "image" required="true" returnType="string">
+        <cfquery name="saveSSO" datasource="demo">
+            INSERT INTO usertable (fullname,emailID,image)
+            values(
+                <cfqueryparam value="#arguments.name#" cfsqltype="cf_sql_varchar">,
+                <cfqueryparam value="#arguments.emailID#" cfsqltype="cf_sql_varchar">,
+                <cfqueryparam value="#arguments.image#" cfsqltype="cf_sql_varchar">
+            ) 
+        </cfquery>
+        <cfreturn {"success":true}>
     </cffunction>
 </cfcomponent>

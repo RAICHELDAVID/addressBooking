@@ -1,4 +1,3 @@
-
 <div class="d-flex justify-content-center align-items-center loginMainContainer">
     <div class="loginCenter">
         <div class="leftContent">
@@ -12,13 +11,13 @@
                 <input type="text" name="strUsername" id="strUsername" placeholder="Username"><br><br>
                 <input type="password" name="strPassword" id="strPassword" placeholder="Password"><br><br>
                 <input type="password" name="strConfirmPassword" id="strConfirmPassword" placeholder="Confirm Password"><br><br>
+				<input type="file" name="adminPictureFile" id="adminPictureFile"><br><br>                   
                 <button type="submit" name="signup" id="signupBtn">REGISTER</button>
                 <p id="message" class="pt-2 text-center"> </p>
             </form>
 
         </div>
-    </div>
-    
+    </div> 
 </div>
 </body>
 </html>

@@ -26,11 +26,7 @@
             include "/views/excelDownload.cfm";
         break;
 
-
-        // The provided event could not be matched.
         default:
-           // throw( type="InvalidEvent" );
-           /* include "/controllers/readAction.cfm";*/
             include "/views/header.cfm";
             include "/views/Loginnavigation.cfm";
             include "/views/login.cfm";

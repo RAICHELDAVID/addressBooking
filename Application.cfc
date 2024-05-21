@@ -29,8 +29,6 @@ component
 	
 	// I initialize the application.
 	function onApplicationStart(){
-
-		// Return true so the application can be processed.
 		return( true );
 		
 	}
@@ -41,6 +39,8 @@ component
 		var session.login=false;
 		var session.fullname='';
 		var session.userid=0;
+		var session.image="";
+		var session.sso=false;
 		return( true );
 
 	}

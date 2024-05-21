@@ -1,4 +1,3 @@
-
 <cfscript>
     component persistent="true" table="person" {
         property name="personid";
