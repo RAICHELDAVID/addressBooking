@@ -22,9 +22,8 @@ $(document).ready(function () {
 			success: function (response) {
 				if (response.message == true) {
 					$("#message").text('Login successful!').css("color", "green");
-					setTimeout(function () {
-						window.location.href = "?action=listPage";
-					}, 1000);
+					window.location.href = "?action=listPage";
+					
 				} else {
 					$("#message").text('Invalid username or password!').css("color", "red");
 				}
@@ -150,9 +149,8 @@ $(document).ready(function () {
 				if (response.success == true) {
 
 					$('#validationMessage').text(response.message).css("color", "green");
-					setTimeout(function () {
-						window.location.href = "?action=listPage";
-					}, 1000);
+					window.location.href = "?action=listPage";
+				
 				} else {
 					$('#validationMessage').text(response.message).css("color", "red");
 				}
@@ -299,9 +297,8 @@ $(document).ready(function () {
 			success: function (response) {
 				if (response.success) {
 					alert(response.message);
-					setTimeout(function () {
-						window.location.href = "?action=listPage";
-					}, 1000);
+					window.location.href = "?action=listPage";
+					
 				}
 			}
 		});
