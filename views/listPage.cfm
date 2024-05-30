@@ -129,7 +129,7 @@
 									</div>
 									<div class="d-flex flex-column">
 										<label>Phone number *</label>
-										<input type="" id="intPhoneNumber" name="intPhoneNumber" maxlength="10" placeholder="Your Phone number">                        
+										<input type="" id="intPhoneNumber" name="intPhoneNumber" maxlength="18" placeholder="Your Phone number">                        
 									</div>
 								</div>
 								<input type="hidden" name="personid" id="personid" value="0">

@@ -81,8 +81,10 @@ component{
         var local.regexPin='^\d{6}$';
         var local.regexPhone='^\d{10}$';
         var regexEmail = '\w+@\w+\.\w{2,}';
-
         var local.errors = [];
+            if(len(strFirstName) gt 40||len(strLastName) gt 40){
+                arrayAppend(local.errors, "maximum length of name be 40 characters.");
+            }
             if (!reFind(local.regexPName, strFirstName)) {
                 arrayAppend(local.errors, "First Name should contain only alphabets.");
             }
