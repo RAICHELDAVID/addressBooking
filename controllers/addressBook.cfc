@@ -15,7 +15,7 @@ component{
 
     remote function validateSignUp(strName,strEmail,strUsername,strPassword,strConfirmPassword) returnformat="json"{
         var local.errors = [];
-        var regexName = "^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$" 
+        var regexName = '^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$';
         var regexEmail = '\w+@\w+\.\w{2,}';
         var regexPassword = '^[a-zA-Z]+[\W_][0-9]+$';
 

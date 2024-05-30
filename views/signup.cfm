@@ -15,7 +15,6 @@
                 <button type="submit" name="signup" id="signupBtn">REGISTER</button>
                 <p id="message" class="pt-2 text-center"> </p>
             </form>
-
         </div>
     </div> 
 </div>

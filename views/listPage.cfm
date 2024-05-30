@@ -46,7 +46,7 @@
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-primary uploadBtn">UPLOAD</button>
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">CLOSE</button>
 						</div>
 					</div>
 				</div>
@@ -133,7 +133,7 @@
 									</div>
 								</div>
 								<input type="hidden" name="personid" id="personid" value="0">
-								<input type="submit" class="btn btn-primary" id="formBtn" value="submit">
+								<input type="submit" class="btn btn-primary" id="formBtn" value="Submit">
 								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 							</form>
 							<p id="validationMessage"></p>
@@ -191,11 +191,8 @@
 							<div class="modal-footer">
 								<img src="" id="userImageView" alt="User Image" width="100" height="100">
 							</div>
-
 						</div>
-						
 					</div>
-					
 				</div>
 			</div>
 		</div>
