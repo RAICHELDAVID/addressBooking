@@ -129,7 +129,10 @@
 									</div>
 									<div class="d-flex flex-column">
 										<label>Phone number *</label>
-										<input type="" id="intPhoneNumber" name="intPhoneNumber" maxlength="10" placeholder="Your Phone number">                        
+										<div class="d-flex">
+											<input type="text" class="countryCode" value="+91" readonly>
+											<input type="text" id="intPhoneNumber" name="intPhoneNumber" maxlength="10" placeholder="Your Phone number">
+										</div>                        
 									</div>
 								</div>
 								<input type="hidden" name="personid" id="personid" value="0">

@@ -76,49 +76,68 @@ component{
         cflocation(url="../?action=login");
     }
 
-    remote function savePageValidation(strFirstName, strLastName,intPincode,strEmailID,intPhoneNumber) returnFormat="json" {
+    remote function savePageValidation(strFirstName, strLastName,intPincode,strEmailID,intPhoneNumber,strBirthday,strAddress) returnFormat="json" {
         var local.regexPName='^[A-Za-z]+$';
         var local.regexPin='^\d{6}$';
-        var local.regexPhone='^\d{10}$';
-        var regexEmail = '\w+@\w+\.\w{2,}';
-
+        var local.regexPhoneWithCode= '^(\+91)?\d{10}$';
+        var regexEmail = '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$';
+        var local.currentDate=  DateFormat(now(), "yyyy-mm-dd");
         var local.errors = [];
-            if (!reFind(local.regexPName, strFirstName)) {
-                arrayAppend(local.errors, "First Name should contain only alphabets.");
+        
+        if(len(strFirstName) gt 40||len(strLastName) gt 40){
+            arrayAppend(local.errors, "maximum length of name be 40 characters.");
+        }
+        if (!reFind(local.regexPName, strFirstName)) {
+            arrayAppend(local.errors, "First Name should contain only alphabets.");
+        }
+        if (!reFind(local.regexPName, strLastName)) {
+            arrayAppend(local.errors, "Last Name should contain only alphabets.");
+        }
+        if (!reFind(local.regexPin, intPincode)) {
+            arrayAppend(local.errors, "pincode should be of 6 digits");
+        }
+        if (!REFindNoCase(local.regexPhoneWithCode, intPhoneNumber)){
+            arrayAppend(local.errors, "phone number contain only 10 digits");
+        }
+        if (strBirthday>local.currentDate){
+            arrayAppend(local.errors, "Invalid date");
+        }
+        if (!isValid("regex", strEmailID, regexEmail)) {
+            arrayAppend(local.errors, "Email id is not in the correct format (abc@abc.com). Allowed special characters in username are {+, ., -, _}.");
+        }
+        else if(personid<=0){
+            var variables.result = createObject("component", "models.addressBook").isEmailExist(strEmailID);
+            if (variables.result.recordCount > 0) {
+                    if (variables.result.emailID == strEmailID) {
+                        arrayAppend(local.errors, "Emailid already exists.");
+                    }
             }
-            if (!reFind(local.regexPName, strLastName)) {
-                arrayAppend(local.errors, "Last Name should contain only alphabets.");
-            }
-
-            if (!reFind(local.regexPin, intPincode)) {
-                arrayAppend(local.errors, "pincode should be of 6 digits");
-            }
-            if (!reFind(local.regexPhone, intPhoneNumber)) {
-                arrayAppend(local.errors, "phone number contain only 10 digits");
-            }
-            if (!reFind(regexEmail, strEmailID)) {
-                arrayAppend(local.errors, "email id is in the format abc@abc.com");
-            }
-            else if(personid<=0){
-                var variables.result = createObject("component", "models.addressBook").isEmailExist(strEmailID);
-                if (variables.result.recordCount > 0) {
-                        if (variables.result.emailID == strEmailID) {
-                            arrayAppend(local.errors, "Emailid already exists.");
-                        }
+        }
+        function isXSS(text) {
+            xssPatterns = ["<script>","&","<",">","'","/","\"];
+            for (pattern in xssPatterns) {
+                if (FindNoCase(pattern, text)) {
+                    return true; 
                 }
             }
+            return false; 
+        }
+
+        if (isXSS(strAddress)) {
+            arrayAppend(local.errors, "Invalid address");
+        } 
             
-            if (arrayLen(local.errors) > 0) {
-                return {
-                "success": false,
-                "message": local.errors
-                 };
-            } else {
-                return {
-                "success": true,
-                "message": "Successful registration!"
+        if (arrayLen(local.errors) > 0) {
+            return {
+            "success": false,
+            "message": local.errors
             };
-            }
+        } else {
+            return {
+            "success": true,
+            "message": "Successful registration!"
+            };
+        }
     }
 
     remote any function googleLogin(emailID,name,image) returnFormat="json" {
@@ -149,3 +168,5 @@ component{
     } 
 }
   
+
+

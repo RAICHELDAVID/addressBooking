@@ -23,7 +23,7 @@ $(document).ready(function () {
 				if (response.message == true) {
 					$("#message").text('Login successful!').css("color", "green");
 					window.location.href = "?action=listPage";
-					
+
 				} else {
 					$("#message").text('Invalid username or password!').css("color", "red");
 				}
@@ -33,7 +33,7 @@ $(document).ready(function () {
 			}
 		});
 	});
-   
+
 	$('#signupBtn').click(function (event) {
 		event.preventDefault();
 		var strName = $("#strName").val().trim();
@@ -147,10 +147,9 @@ $(document).ready(function () {
 			success: function (response) {
 
 				if (response.success == true) {
-
 					$('#validationMessage').text(response.message).css("color", "green");
 					window.location.href = "?action=listPage";
-				
+
 				} else {
 					$('#validationMessage').text(response.message).css("color", "red");
 				}
@@ -256,20 +255,19 @@ $(document).ready(function () {
 
 	function printContent(orientation) {
 		var css = `
-      @page {
-          size: ${orientation};
-      }
-      .printNone {
-        display: none;
-    }
-    .printable {
-        display: block;
-
-    }
-    th,td{
-      font-size: x-large;
-    }
-  `;
+			@page {
+				size: ${orientation};
+			}
+			.printNone {
+				display: none;
+			}
+			.printable {
+				display: block;
+			}
+			th,td{
+				font-size: x-large;
+			}
+   		`;
 		var style = document.createElement('style');
 		style.media = 'print';
 		if (style.styleSheet) {
@@ -298,7 +296,7 @@ $(document).ready(function () {
 				if (response.success) {
 					alert(response.message);
 					window.location.href = "?action=listPage";
-					
+
 				}
 			}
 		});
@@ -323,8 +321,8 @@ $(document).ready(function () {
 		window.history.pushState({}, document.title, "/address booking/addressBooking/?action=listPage");
 	}
 	let info = JSON.parse(localStorage.getItem('authInfo'));
-	
-   if (info) {
+
+	if (info) {
 		$.ajax({
 			url: "https://www.googleapis.com/oauth2/v3/userinfo",
 			headers: {
