@@ -1,9 +1,7 @@
 <cfoutput>
     <cfset persons = EntityLoad("person")>
     <cfset spreadsheetObj = spreadsheetNew()>
-
     <cfset spreadsheetAddRow(spreadsheetObj, "Title, Name, Gender, Address, Street, Pincode, EmailID, Phone, ImageName")>
-
     <cfset currentRow = 2>
 
     <cfloop array="#persons#" index="person">

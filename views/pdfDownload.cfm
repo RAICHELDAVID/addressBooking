@@ -7,7 +7,6 @@
     </head>
     <body>
         <h1>List of Data</h1>
-
         <cfoutput>
             <table>
                 <thead>
@@ -21,21 +20,20 @@
                 <tbody>
                     <cfset persons = EntityLoad("person")>
                     <cfloop array="#persons#" index="person">
-                    <cfif session.userid eq person.getuserid()>
-                        <tr>
-								<td><img src="./assets/uploads/#person.getimage()#" alt="image" width="50" height="50"></td>
-                            <td>#person.getFname()# #person.getLname()#</td>
-                            <td>#person.getemailID()#</td>
-                            <td>#person.getphone()#</td>
-                        </tr>
+                        <cfif session.userid eq person.getuserid()>
+                            <tr>
+                                <td><img src="./assets/uploads/#person.getimage()#" alt="image" width="50" height="50"></td>
+                                <td>#person.getFname()# #person.getLname()#</td>
+                                <td>#person.getemailID()#</td>
+                                <td>#person.getphone()#</td>
+                            </tr>
                         <cfelse>
-							<cfcontinue>	
-						</cfif>
+                            <cfcontinue>	
+                        </cfif>
                     </cfloop>
                 </tbody>
             </table>
         </cfoutput>
-
     </body>
     </html>
 </cfdocument>
