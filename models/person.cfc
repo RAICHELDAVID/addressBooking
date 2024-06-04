@@ -5,7 +5,7 @@
         property name="Fname";
         property name="Lname";
         property name="gender";
-        property name="Date of Birth";
+        property name="dob";
         property name="address";
         property name="street";
         property name="pincode";
