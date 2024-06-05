@@ -26,7 +26,7 @@
     <cffunction  name="selectData"  access="remote" returnformat="json">
         <cfargument name="personid" required="true" type="integer">
         <cfquery name="selectData" datasource="demo">
-            SELECT personid,title,Fname,Lname,gender,[Date of Birth] as dob,address,street,pincode,emailID,phone,image FROM person 
+            SELECT personid,title,Fname,Lname,gender,dob,address,street,pincode,emailID,phone,image FROM person 
             WHERE personid=<cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">
         </cfquery>
         <cfset parsedDate = ParseDateTime(selectData.dob)>
@@ -86,7 +86,7 @@
     <cffunction name="displayData" access="remote" returnformat="json">
         <cfargument name="personid" required="true" type="integer">
         <cfquery name="displayDataQuery" datasource="demo">
-            SELECT  CONCAT(title,' ',Fname,' ',Lname) AS name,gender,[Date of Birth],concat(address,' ',street) as address,pincode,emailID,phone,image
+            SELECT  CONCAT(title,' ',Fname,' ',Lname) AS name,gender,dob,concat(address,' ',street) as address,pincode,emailID,phone,image
             FROM person 
             WHERE personid = <cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">
         </cfquery>
@@ -136,7 +136,7 @@
                 Fname = <cfqueryparam value="#arguments.strFirstName#" cfsqltype="cf_sql_varchar">,
                 Lname = <cfqueryparam value="#arguments.strLastName#" cfsqltype="cf_sql_varchar">,
                 gender = <cfqueryparam value="#arguments.strGender#" cfsqltype="cf_sql_varchar">,
-                [Date of Birth] = <cfqueryparam value="#formattedDate#" cfsqltype="cf_sql_varchar">,
+                dob = <cfqueryparam value="#formattedDate#" cfsqltype="cf_sql_varchar">,
                 address = <cfqueryparam value="#arguments.strAddress#" cfsqltype="cf_sql_varchar">,                
                 street = <cfqueryparam value="#arguments.strStreet#" cfsqltype="cf_sql_varchar">,
                 pincode = <cfqueryparam value="#arguments.intPincode#" cfsqltype="cf_sql_integer">,                
@@ -148,7 +148,7 @@
             <cfreturn {"success": true, "message": "UPDATED!!"}>
         <cfelseif (arguments.personid eq 0)>
             <cfquery name="addPageQuery" datasource="demo">
-                INSERT INTO person(title, Fname, Lname, gender, [Date of Birth], address, street, pincode, emailID, phone,image, userid)
+                INSERT INTO person(title, Fname, Lname, gender,dob, address, street, pincode, emailID, phone,image, userid)
                 VALUES (
                     <cfqueryparam value="#arguments.strTitle#" cfsqltype="cf_sql_varchar">,
                     <cfqueryparam value="#arguments.strFirstName#" cfsqltype="cf_sql_varchar">,
@@ -174,12 +174,28 @@
         <cffile action="upload" destination="#local.path#" nameconflict='makeunique'>
         <cfset local.uploadFile = cffile.serverDirectory & "/" & cffile.serverFile>
         <cfspreadsheet action="read" src="#local.uploadFile#" query="excelData" headerrow="1" rows='2-100'>
+        <cfset local.columnNames = []>
+        <cfloop list="#excelData.ColumnList#" index="columnName">
+            <cfset arrayAppend(local.columnNames, columnName)>
+        </cfloop>
+        <cfset local.arrayCount = arrayLen(local.columnNames)>
+        <cfset ArraySort(local.columnNames, "text")>
+        <cfquery name="getResult" datasource="demo">
+            SELECT column_name
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_NAME = 'person'
+            AND column_name NOT IN ('personid', 'userid')
+        </cfquery>
+        <cfset local.recordCount = getResult.RecordCount>
+        <cfif local.arrayCount NEQ local.recordCount>
+            <cfreturn {"success": false, "message": "cannot add excel data"}>
+        </cfif>
         <cfset local.insertedCount = 0>
         <cfset local.skippedCount = 0>
             <cfloop query="excelData">
-                <cfset local.title = excelData.Title>
-                <cfset local.firstName = excelData.firstname>
-                <cfset local.lastName = excelData.lastname>
+                <cfset local.title = excelData.title>
+                <cfset local.firstName = excelData.Fname>
+                <cfset local.lastName = excelData.Lname>
                 <cfset local.gender = excelData.gender>
                 <cfset local.dob = excelData.dob>
                 <cfset local.address = excelData.address>
@@ -191,7 +207,7 @@
                 <cfset local.emailExistQuery = isEmailExist(local.emailID)>
                 <cfif local.emailExistQuery.recordCount eq 0>
                 <cfquery datasource="demo">
-                    INSERT INTO person (title, Fname, Lname, gender, [Date of Birth], address, street, pincode, emailID, phone, image, userid)
+                    INSERT INTO person (title, Fname, Lname, gender, dob, address, street, pincode, emailID, phone, image, userid)
                     VALUES (
                         <cfqueryparam value="#local.title#" cfsqltype="cf_sql_varchar">,
                         <cfqueryparam value="#local.firstName#" cfsqltype="cf_sql_varchar">,

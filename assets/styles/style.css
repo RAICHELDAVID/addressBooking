@@ -320,3 +320,43 @@ body {
  input.countryCode {
 	width: 37px;
  }
+
+
+html,code
+{
+	font:15px/22px arial,sans-serif;
+}
+#logo {
+    display: inline-block;
+    height: 54px;
+    width: 150px;
+}
+
+#logo {
+    background: url(//www.google.com/images/branding/googlelogo/1x/googlelogo_color_150x54dp.png) no-repeat;
+    margin-left: -5px;
+}
+
+.errorText{
+	margin: 11px 0 22px;
+    overflow: hidden;
+}
+
+.errorContainer
+{
+	background:url(//www.google.com/images/errors/robot.png) 100% 5px no-repeat;
+	margin:7% auto 0;
+	max-width:573px;
+	min-height:180px;
+	padding:30px 0 15px;
+	padding-right: 205px;
+}
+
+
+ins{
+	color:#777;
+	text-decoration:none;
+}
+code {
+    color: black !important;
+}
