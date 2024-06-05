@@ -293,10 +293,13 @@ $(document).ready(function () {
 			processData: false,
 			dataType: 'json',
 			success: function (response) {
-				if (response.success) {
+				if (response.success==true) {
 					alert(response.message);
-					window.location.href = "?action=listPage";
+					/*window.location.href = "?action=listPage";*/
 
+				}
+				else if(response.success==false){
+					alert(response.message);
 				}
 			}
 		});
