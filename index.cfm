@@ -15,11 +15,9 @@
             break;
 
         case "listPage":
-           
-                include "/views/header.cfm";
-                include "/views/homeNavigation.cfm";
-                include "/views/listPage.cfm";
-
+            include "/views/header.cfm";
+            include "/views/homeNavigation.cfm";
+            include "/views/listPage.cfm";
             break;
 
         case "pdf":
