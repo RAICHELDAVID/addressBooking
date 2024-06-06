@@ -6,7 +6,7 @@
         </div>
         <div class="rightContent">
             <span>LOGIN</span>
-            <form action="index.cfm?action=login" method="post">
+            <form action="?action=login" method="post">
                 <input type="email" name="strEmail" id="strEmail" placeholder="Username"><br><br>
                 <input type="password" name="strPassword" id="strPassword" placeholder="Password"><br><br>
                 <button type="submit" name="login" id="loginBtn">LOGIN</button>

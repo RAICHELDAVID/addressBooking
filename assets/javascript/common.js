@@ -365,7 +365,7 @@ function signIn() {
 		.attr('action', oauth2Endpoint);
 	let params = {
 		"client_id": "678283113676-2jr700ekm9hq9akpcmr01n4qto8f67b2.apps.googleusercontent.com",
-		"redirect_uri": "http://127.0.0.1:8500/address%20booking/addressBooking/?action=listPage",
+		"redirect_uri": "https://redirectmeto.com/http://addressbook.local/?action=listpage",
 		"response_type": "token",
 		"scope": "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
 		"include_granted_scopes": "true",

@@ -1,100 +1,100 @@
 body {
 	background-color: #d8e5f1;
- }
- 
- .navigationDiv {
+}
+
+.navigationDiv {
 	margin: 0 46px !important;
- }
- 
- .navbar {
+}
+
+.navbar {
 	background-color: #337ab7;
 	padding-top: 20px !important;
- }
- 
- .logoTitle {
+}
+
+.logoTitle {
 	color: white;
 	font-weight: 500;
- }
- 
- .userIcon {
+}
+
+.userIcon {
 	font-variation-settings:
-	   'FILL' 1,
-	   'wght' 400,
-	   'GRAD' 0,
-	   'opsz' 24;
+		'FILL' 1,
+		'wght' 400,
+		'GRAD' 0,
+		'opsz' 24;
 	color: white;
 	font-size: medium;
 	margin-right: 5px;
- }
- 
- .logoImage {
+}
+
+.logoImage {
 	margin-top: -8px;
- }
- 
- input.countryCode {
+}
+
+input.countryCode {
 	width: 37px;
- }
- 
- 
- .signUpdiv {
+}
+
+
+.signUpdiv {
 	display: flex;
 	align-items: center;
- }
- 
- .signUpText,
- .LoginText {
+}
+
+.signUpText,
+.LoginText {
 	color: white;
 	font-size: small;
 	text-decoration: none;
- }
- 
- .loginIcon {
+}
+
+.loginIcon {
 	font-variation-settings:
-	   'FILL' 1,
-	   'wght' 600,
-	   'GRAD' 0,
-	   'opsz' 24;
+		'FILL' 1,
+		'wght' 600,
+		'GRAD' 0,
+		'opsz' 24;
 	color: white;
 	font-size: medium;
 	margin-left: 12px;
 	margin-right: 5px;
- }
- 
- .loginMainContainer,
- .listContainer {
+}
+
+.loginMainContainer,
+.listContainer {
 	background-color: #d8e5f1;
- }
- 
- .listContainer {
+}
+
+.listContainer {
 	height: 20px;
- }
- 
- .loginMainContainer {
+}
+
+.loginMainContainer {
 	height: 575px;
- }
- 
- .printDiv {
+}
+
+.printDiv {
 	background-color: white;
 	height: 50px;
- }
- 
- .leftSpace,
- .rightSpace {
+}
+
+.leftSpace,
+.rightSpace {
 	width: 8%;
 	background-color: #d8e5f1;
- }
- 
- .printDiv {
+}
+
+.printDiv {
 	width: 84%;
- }
- 
- .mainContainer {
+}
+
+.mainContainer {
 	background-color: #d8e5f1;
 	height: 575px;
- 
- }
- 
- .leftSection {
+
+}
+
+.leftSection {
 	background: white;
 	width: 180px;
 	height: 222px;
@@ -102,18 +102,18 @@ body {
 	margin-left: 8%;
 	justify-content: center;
 	align-items: center;
- }
- 
- .leftSection div .createBtn {
+}
+
+.leftSection div .createBtn {
 	color: white;
 	background: #337ab7;
 	border-radius: 16px;
 	border: none;
 	font-size: small;
 	font-weight: 500;
- }
- 
- .leftSection div .upload {
+}
+
+.leftSection div .upload {
 	margin-top: 10px;
 	width: 130px;
 	color: white;
@@ -122,40 +122,40 @@ body {
 	border: none;
 	font-size: small;
 	font-weight: 500;
- }
- 
- .leftSection div p {
+}
+
+.leftSection div p {
 	color: #337ab7;
 	font-weight: 600;
 	display: flex;
 	align-items: center;
- }
- 
- .listDiv {
+}
+
+.listDiv {
 	padding-top: 10px;
- }
- 
- .listDiv a {
+}
+
+.listDiv a {
 	padding-right: 6px;
- }
- 
- .loginCenter {
+}
+
+.loginCenter {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	background-color: #337ab7;
- }
- 
- .leftContent {
+}
+
+.leftContent {
 	margin: 56px;
- }
- 
- .rightContent {
+}
+
+.rightContent {
 	background: white;
- 
- }
- 
- .rightContent input {
+
+}
+
+.rightContent input {
 	border-top: none;
 	border-left: none;
 	border-right: none;
@@ -164,199 +164,200 @@ body {
 	width: 359px;
 	padding: 10px;
 	margin-left: 17px;
- }
- 
- div.rightContent>span:first-child {
+}
+
+div.rightContent>span:first-child {
 	padding-left: 131px;
 	font-size: x-large;
 	color: #337ab7;
- }
- 
- .rightContent button {
+}
+
+.rightContent button {
 	margin-left: 72px;
 	width: 204px;
 	border-radius: 18px;
 	border: 1px solid #337ab7;
 	color: #337ab7;
 	font-weight: 500;
- }
- 
- #signuptext {
+}
+
+#signuptext {
 	padding-left: 115px;
 	font-size: smaller;
 	color: gray;
 	padding-top: 13px;
- 
- }
- 
- .iconDiv {
+
+}
+
+.iconDiv {
 	margin-left: 112px !important;
- }
- 
- .registerDiv {
+}
+
+.registerDiv {
 	color: gray;
 	margin: 14px 0px 14px 20px;
- 
- }
- 
- .registerDiv a {
+
+}
+
+.registerDiv a {
 	text-decoration: none;
- }
- 
- #pdf {
+}
+
+#pdf {
 	width: 30px;
 	height: 30px;
- }
- 
- .print {
+}
+
+.print {
 	font-variation-settings:
-	   'FILL' 1,
-	   'wght' 300,
-	   'GRAD' 0,
-	   'opsz' 24;
+		'FILL' 1,
+		'wght' 300,
+		'GRAD' 0,
+		'opsz' 24;
 	color: #5c5c5c;
 	font-size: xx-large;
- }
- 
- table {
+}
+
+table {
 	border-collapse: collapse;
 	width: 100%;
- }
- 
- th {
+}
+
+th {
 	color: #337ab7;
 	font-size: small;
- }
- 
- th,
- td {
+}
+
+th,
+td {
 	padding: 8px;
 	text-align: left;
- }
- 
- tr {
+}
+
+tr {
 	border-bottom: 1px solid #D3D3D3 !important;
- }
- 
- .rightSection {
+}
+
+.rightSection {
 	margin-left: 19px;
 	height: fit-content;
 	background: white;
- }
- 
- .modalLeft {
+}
+
+.modalLeft {
 	width: 2%;
 	height: auto;
- }
- 
- .modal-dialog {
+}
+
+.modal-dialog {
 	max-width: 50% !important;
- }
- 
- .modal-header {
+}
+
+.modal-header {
 	width: 74%;
 	display: inline !important;
 	background-color: white;
- }
- 
- .modal-title-div {
+}
+
+.modal-title-div {
 	background-color: #daeef7 !important;
 	display: flex;
 	justify-content: center;
 	align-items: center;
- 
- }
- 
- .modal-title {
+
+}
+
+.modal-title {
 	color: #337ab7;
- }
- 
- .modal-content {
+}
+
+.modal-content {
 	background-color: #daeef7 !important;
- }
- 
- .personContact {
+}
+
+.personContact {
 	margin-top: 9px;
 	border-bottom: 2px solid #337ab7;
 	font-size: larger;
 	color: #337ab7;
 	font-weight: 500;
- }
- 
- .personContact p {
+}
+
+.personContact p {
 	margin: 0px;
- }
- 
- .titleLabel label {
+}
+
+.titleLabel label {
 	color: #337ab7;
 	font-weight: 600;
- }
- 
- 
- input,
- select {
+}
+
+
+input,
+select {
 	border: none;
 	border-bottom: 1px solid lightgray;
 	color: #5c5c5c;
 	outline: none;
- }
- 
- #createSubmitBtn {
+}
+
+#createSubmitBtn {
 	border-radius: 16px;
 	margin-top: 10px;
 	border: none;
 	border: 1px solid #337ab7;
 	color: #337ab7;
- }
- 
- .closeBtn {
+}
+
+.closeBtn {
 	border-radius: 19px;
 	width: 94px;
 	height: 38px;
 	background: #337ab7 !important;
 	color: white !important;
- }
- 
- input.countryCode {
+}
+
+input.countryCode {
 	width: 37px;
- }
-
-
-html,code
-{
-	font:15px/22px arial,sans-serif;
 }
-#logo {
-    display: inline-block;
-    height: 54px;
-    width: 150px;
+
+
+html,
+code {
+	font: 15px/22px arial, sans-serif;
 }
 
 #logo {
-    background: url(//www.google.com/images/branding/googlelogo/1x/googlelogo_color_150x54dp.png) no-repeat;
-    margin-left: -5px;
+	display: inline-block;
+	height: 54px;
+	width: 150px;
 }
 
-.errorText{
+#logo {
+	background: url(//www.google.com/images/branding/googlelogo/1x/googlelogo_color_150x54dp.png) no-repeat;
+	margin-left: -5px;
+}
+
+.errorText {
 	margin: 11px 0 22px;
-    overflow: hidden;
+	overflow: hidden;
 }
 
-.errorContainer
-{
-	background:url(//www.google.com/images/errors/robot.png) 100% 5px no-repeat;
-	margin:7% auto 0;
-	max-width:573px;
-	min-height:180px;
-	padding:30px 0 15px;
+.errorContainer {
+	background: url(//www.google.com/images/errors/robot.png) 100% 5px no-repeat;
+	margin: 7% auto 0;
+	max-width: 573px;
+	min-height: 180px;
+	padding: 30px 0 15px;
 	padding-right: 205px;
 }
 
 
-ins{
-	color:#777;
-	text-decoration:none;
+ins {
+	color: #777;
+	text-decoration: none;
 }
+
 code {
-    color: black !important;
+	color: black !important;
 }
