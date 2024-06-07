@@ -22,7 +22,7 @@ $(document).ready(function () {
 			success: function (response) {
 				if (response.message == true) {
 					$("#message").text('Login successful!').css("color", "green");
-					window.location.href = "?action=listPage";
+					window.location.href = "/views/listPage.cfm";
 
 				} else {
 					$("#message").text('Invalid username or password!').css("color", "red");
@@ -50,7 +50,7 @@ $(document).ready(function () {
 		formData.append('adminPictureFile', $('#adminPictureFile')[0].files[0]);
 		$.ajax({
 			type: 'post',
-			url: 'controllers/addressBook.cfc?method=validateSignUp',
+			url: '../controllers/addressBook.cfc?method=validateSignUp',
 			data: formData,
 			processData: false,
 			contentType: false,
@@ -75,7 +75,7 @@ $(document).ready(function () {
 				success: function (response) {
 					if (response.success) {
 						$("#message").text(response.message).css("color", "green");
-						$('#userImage').attr('src', './assets/uploads/' + response.image);
+						$('#userImage').attr('src', '../assets/uploads/' + response.image);
 					}
 				}
 
@@ -148,7 +148,7 @@ $(document).ready(function () {
 
 				if (response.success == true) {
 					$('#validationMessage').text(response.message).css("color", "green");
-					window.location.href = "?action=listPage";
+					window.location.href = "/views/listPage.cfm";
 
 				} else {
 					$('#validationMessage').text(response.message).css("color", "red");
@@ -163,7 +163,7 @@ $(document).ready(function () {
 	$('.createBtn').click(function (e) {
 		e.preventDefault();
 		$("#formID").get(0).reset();
-		$('#userImageEdit').attr('src', './assets/images/user.JPG');
+		$('#userImageEdit').attr('src', '../assets/images/user.JPG');
 
 	});
 
@@ -172,7 +172,7 @@ $(document).ready(function () {
 		var personid = $(this).attr('personid');
 		$.ajax({
 			type: "POST",
-			url: "./models/addressBook.cfc?method=selectData",
+			url: "../models/addressBook.cfc?method=selectData",
 			data: {
 				personid: personid
 			},
@@ -192,7 +192,7 @@ $(document).ready(function () {
 					$('#strEmailID').val(response.emailID);
 					$('#intPhoneNumber').val(response.phone);
 
-					$('#userImageEdit').attr('src', './assets/uploads/' + response.image);
+					$('#userImageEdit').attr('src', '../assets/uploads/' + response.image);
 				}
 			}
 		});
@@ -204,7 +204,7 @@ $(document).ready(function () {
 		if (confirm("click OK to delete this row?")) {
 			$.ajax({
 				type: "POST",
-				url: "./models/addressBook.cfc?method=deleteData",
+				url: "../models/addressBook.cfc?method=deleteData",
 				data: {
 					personid: personid
 				},
@@ -225,13 +225,13 @@ $(document).ready(function () {
 		var personid = $(this).attr('personid');
 		$.ajax({
 			type: "POST",
-			url: "./models/addressBook.cfc?method=displayData",
+			url: "../models/addressBook.cfc?method=displayData",
 			data: {
 				personid: personid
 			},
 			dataType: "json",
 			success: function (response) {
-				var imageUrl = './assets/uploads/' + response.DATA[0][7];
+				var imageUrl = '../assets/uploads/' + response.DATA[0][7];
 				$('#userImageView').attr('src', imageUrl);
 				var tableHtml = "<table>";
 				$.each(response.COLUMNS, function (index, columnName) {
@@ -287,7 +287,7 @@ $(document).ready(function () {
 		formData.append('excelFile', excelFile);
 		$.ajax({
 			type: 'post',
-			url: './models/addressBook.cfc?method=excelRead',
+			url: '../models/addressBook.cfc?method=excelRead',
 			data: formData,
 			contentType: false,
 			processData: false,
@@ -346,7 +346,7 @@ $(document).ready(function () {
 					dataType: "json",
 					success: function (response) {
 						if (response.success) {
-							window.location.href = "?action=listPage";
+							window.location.href = "/views/listPage.cfm";
 						}
 					},
 					error: function (xhr, status, error) {

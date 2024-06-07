@@ -1,4 +1,6 @@
 <cfset local.forSignin = createObject("component","controllers.addressBook").login()>
+<cfinclude  template="header.cfm">
+<cfinclude  template="Loginnavigation.cfm">
 <div class="d-flex justify-content-center align-items-center loginMainContainer">
     <div class="loginCenter">
         <div class="leftContent">
@@ -18,7 +20,8 @@
                 <img src="./assets/images/googleicon.JPG" id="googleIcon" alt="Google Logo" width="45" height="45" class="d-inline-block align-text-top logoImage">
             </div>
             <div class="registerDiv">
-                <span>Don't have an account?<a href="?action=signup">Register Here</a>
+                <span>Don't have an account?<a href="/views/signup.cfm">Register Here</a></span>
+
             </div>
         </div>
     </div>
