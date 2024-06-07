@@ -1,11 +1,13 @@
+<cfinclude  template="header.cfm">
+<cfinclude  template="Loginnavigation.cfm">
 <div class="d-flex justify-content-center align-items-center loginMainContainer">
     <div class="loginCenter">
         <div class="leftContent">
-            <img src="./assets/images/logo.png" alt="Image" width="100" height="100">
+            <img src="../assets/images/logo.png" alt="Image" width="100" height="100">
         </div>
         <div class="rightContent">
             <span>SIGN UP</span>
-            <form action="index.cfm?action=signup" method="post">
+            <form action="signup.cfm" method="post">
                 <input type="text" name="strName" id="strName" placeholder="Full Name"><br><br>
                 <input type="email" name="strEmail" id="strEmail" placeholder="Email ID"><br><br>
                 <input type="text" name="strUsername" id="strUsername" placeholder="Username"><br><br>

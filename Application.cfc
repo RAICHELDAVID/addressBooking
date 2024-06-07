@@ -96,12 +96,12 @@ component
 	
 	
 	// I process the actual request. 
-	function onRequest( String scriptName ){
+	// function onRequest( String scriptName ){
 		
-		// No matter what page is requested, include the controller.
-		include "./index.cfm";		
+	// 	// No matter what page is requested, include the controller.
+	// 	include "./index.cfm";		
 
-	}
+	// }
 	
 	
 	// I process any errors that have bubbled upto the root of the 
