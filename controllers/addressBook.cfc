@@ -73,7 +73,7 @@ component{
     remote void function logout(){
         structDelete(session,"login");
         session.login=false;
-        cflocation(url="../?action=login");
+        cflocation(url="/views/login.cfm");
     }
 
     remote function savePageValidation(strFirstName, strLastName,intPincode,strEmailID,intPhoneNumber,strBirthday,strAddress) returnFormat="json" {
