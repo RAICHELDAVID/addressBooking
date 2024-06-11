@@ -22,7 +22,7 @@
                     <cfloop array="#persons#" index="person">
                         <cfif session.userid eq person.getuserid()>
                             <tr>
-                                <td><img src="./assets/uploads/#person.getimage()#" alt="image" width="50" height="50"></td>
+                                <td><img src="../assets/uploads/#person.getimage()#" alt="image" width="50" height="50"></td>
                                 <td>#person.getFname()# #person.getLname()#</td>
                                 <td>#person.getemailID()#</td>
                                 <td>#person.getphone()#</td>

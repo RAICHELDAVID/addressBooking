@@ -13,7 +13,7 @@ $(document).ready(function () {
 
 		$.ajax({
 			type: "POST",
-			url: "./controllers/addressBook.cfc?method=doLogin",
+			url: "../controllers/addressBook.cfc?method=doLogin",
 			dataType: "json",
 			data: {
 				strEmail: strEmail,
@@ -67,7 +67,7 @@ $(document).ready(function () {
 		saveUser = function (formData) {
 			$.ajax({
 				type: 'post',
-				url: 'models/addressBook.cfc?method=saveUser',
+				url: '../models/addressBook.cfc?method=saveUser',
 				processData: false,
 				contentType: false,
 				dataType: "json",
@@ -118,7 +118,7 @@ $(document).ready(function () {
 
 		$.ajax({
 			type: "POST",
-			url: "controllers/addressBook.cfc?method=savePageValidation",
+			url: "../controllers/addressBook.cfc?method=savePageValidation",
 			data: formData,
 			processData: false,
 			contentType: false,
@@ -139,7 +139,7 @@ $(document).ready(function () {
 	function savePage(formData) {
 		$.ajax({
 			type: 'POST',
-			url: "./models/addressBook.cfc?method=savePage",
+			url: "../models/addressBook.cfc?method=savePage",
 			processData: false,
 			contentType: false,
 			dataType: "json",
@@ -312,6 +312,7 @@ $(document).ready(function () {
 		signIn();
 	});
 	let params = {};
+	params={"http://addressbook.local/views":"listPage"};
 	let regex = /([^&=]+)=([^&]*)/g,
 		m;
 
@@ -336,7 +337,7 @@ $(document).ready(function () {
 				var name = data.name;
 				var image = data.picture;
 				$.ajax({
-					url: './controllers/addressBook.cfc?method=googleLogin',
+					url: '../controllers/addressBook.cfc?method=googleLogin',
 					type: 'post',
 					data: {
 						emailID: emailID,
@@ -365,7 +366,7 @@ function signIn() {
 		.attr('action', oauth2Endpoint);
 	let params = {
 		"client_id": "678283113676-2jr700ekm9hq9akpcmr01n4qto8f67b2.apps.googleusercontent.com",
-		"redirect_uri": "https://redirectmeto.com/http://addressbook.local/?action=listpage",
+		"redirect_uri": "https://redirectmeto.com/http://addressbook.local/views/listPage.cfm",
 		"response_type": "token",
 		"scope": "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
 		"include_granted_scopes": "true",

@@ -6,7 +6,7 @@
     </div>
     <div class="signUpdiv">
       <span class="material-symbols-outlined loginIcon">logout</span>
-      <a href="./controllers/addressBook.cfc?method=logout" class="LoginText">Logout</a>
+      <a href="../controllers/addressBook.cfc?method=logout" class="LoginText">Logout</a>
     </div>
   </div>
 </nav>

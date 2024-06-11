@@ -8,8 +8,8 @@
 			<div class="leftSpace"></div>
 			<div class="d-flex justify-content-end printDiv">
 				<div class="d-flex justify-content-end listDiv">
-					<a href="?action=pdf" target="_blank" class="printNone"><img src="../assets/images/pdf.JPG" id="pdf" alt="pdf"></a>
-					<a href="?action=excel" class="printNone"><img src="../assets/images/excel.JPG" id="excel" alt="excel"></a>
+					<a href="./views/pdfDownload.cfm" target="_blank" class="printNone"><img src="../assets/images/pdf.JPG" id="pdf" alt="pdf"></a>
+					<a href="./views/excelDownload.cfm" class="printNone"><img src="../assets/images/excel.JPG" id="excel" alt="excel"></a>
 					<a href="" class="printNone"><span class="material-symbols-outlined print" id="print">print</span></a>
 				</div>
 			</div>
@@ -23,7 +23,7 @@
 				</div>
 				<div class="printNone">
 					<p id="name">
-						<cfoutput>#session.fullname#</cfoutput>
+						<cfoutput>#session.fullname#</cfoutput>..
 					</p>
 				</div>
 				<div class="printNone">
