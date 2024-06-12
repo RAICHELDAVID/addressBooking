@@ -1,3 +1,4 @@
+<cfinclude  template="header.cfm">
 <div class="errorContainer">
     <a href="">
         <span id="logo" aria-label="Google"></span>
