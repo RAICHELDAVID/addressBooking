@@ -97,7 +97,10 @@ $(document).ready(function () {
 		var intPincode = parseInt($("#intPincode").val().trim());
 		var strEmailID = $("#strEmailID").val().trim();
 		var intPhoneNumber = parseInt($("#intPhoneNumber").val().trim());
-
+		let hobbiesArray = [];
+		$("input:checkbox[name=hobbies]:checked").each(function() {
+			hobbiesArray.push($(this).val());
+		});
 		if (strTitle === '' || strFirstName === '' || strLastName === '' || strGender === '' || strBirthday === '' || strAddress === '' || strStreet === '' || intPincode === '' || strEmailID === '' || intPhoneNumber === '') {
 			$("#validationMessage").text('All fields are required').css("color", "red");
 			return false;
@@ -115,6 +118,7 @@ $(document).ready(function () {
 		formData.append('intPhoneNumber', intPhoneNumber);
 		formData.append('strEmailID', strEmailID);
 		formData.append('pictureFile', $('#pictureFile')[0].files[0]);
+		formData.append('hobbies', hobbiesArray.join(','));
 
 		$.ajax({
 			type: "POST",
@@ -166,7 +170,7 @@ $(document).ready(function () {
 		$('#userImageEdit').attr('src', '../assets/images/user.JPG');
 
 	});
-
+	
 	$('.editModalBtn').click(function (e) {
 		e.preventDefault();
 		var personid = $(this).attr('personid');
@@ -179,6 +183,7 @@ $(document).ready(function () {
 			dataType: "json",
 			success: function (response) {
 				if (response) {
+
 					$('#modalTitle').text('EDIT CONTACT')
 					$('#personid').val(response.personid);
 					$('#strTitle').val(response.title);
@@ -191,11 +196,40 @@ $(document).ready(function () {
 					$('#intPincode').val(response.pincode);
 					$('#strEmailID').val(response.emailID);
 					$('#intPhoneNumber').val(response.phone);
+				    if ($.inArray('Drawing', response.hobbies) !== -1) {
+						$('#hobbiesOne').prop('checked', true);
+					}
+					if ($.inArray('Dancing', response.hobbies) !== -1) {
+						$('#hobbiesTwo').prop('checked', true);
+					}
+					if ($.inArray('Cooking', response.hobbies) !== -1) {
+						$('#hobbiesThree').prop('checked', true);
+					}
+					if ($.inArray('Painting', response.hobbies) !== -1) {
+						$('#hobbiesFour').prop('checked', true);
+					}
+					if ($.inArray('Singing', response.hobbies) !== -1) {
+						$('#hobbiesFive').prop('checked', true);
+					}
+					if ($.inArray('Gardening', response.hobbies) !== -1) {
+						$('#hobbiesSix').prop('checked', true);
+					}
+					if ($.inArray('Swimming', response.hobbies) !== -1) {
+						$('#hobbiesSeven').prop('checked', true);
+					}
+					if ($.inArray('Reading', response.hobbies) !== -1) {
+						$('#hobbiesEight').prop('checked', true);
+					}
 
 					$('#userImageEdit').attr('src', '../assets/uploads/' + response.image);
 				}
 			}
 		});
+	});
+
+	$('#formClose').click(function (e) {
+		e.preventDefault();
+		$("#formID").get(0).reset();
 	});
 
 	$('.deleteLink').click(function (e) {
@@ -295,7 +329,7 @@ $(document).ready(function () {
 			success: function (response) {
 				if (response.success==true) {
 					alert(response.message);
-					/*window.location.href = "?action=listPage";*/
+					window.location.href = "listPage.cfm";
 
 				}
 				else if(response.success==false){

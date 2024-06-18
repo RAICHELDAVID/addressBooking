@@ -1,7 +1,7 @@
 <cfoutput>
     <cfset persons = EntityLoad("person")>
     <cfset spreadsheetObj = spreadsheetNew()>
-    <cfset spreadsheetAddRow(spreadsheetObj, "Title, Name, Gender, Address, Street, Pincode, EmailID, Phone, ImageName")>
+    <cfset spreadsheetAddRow(spreadsheetObj, "Title, Name, Gender, Address, Street, Pincode, EmailID, Phone, ImageName,Hobbies")>
     <cfset currentRow = 2>
 
     <cfloop array="#persons#" index="person">
@@ -15,6 +15,7 @@
             <cfset EmailID = person.getemailID()>
             <cfset Phone = person.getphone()>
             <cfset ImageName = person.getimage()>
+            <cfset Hobbies = person.gethobbies()>
 
             <cfif len(trim(ImageName))>
                 <cfset ImageURL = ExpandPath("./assets/uploads/") & ImageName>
@@ -31,6 +32,7 @@
             <cfset spreadsheetSetCellValue(spreadsheetObj, EmailID, currentRow, 7)>
             <cfset spreadsheetSetCellValue(spreadsheetObj, Phone, currentRow, 8)>
             <cfset spreadsheetSetCellValue(spreadsheetObj, ImageURL, currentRow, 9)>
+            <cfset spreadsheetSetCellValue(spreadsheetObj, Hobbies, currentRow, 10)>
             <cfset currentRow = currentRow + 1>
         </cfif>
     </cfloop>
