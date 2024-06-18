@@ -137,9 +137,30 @@
 										</div>                        
 									</div>
 								</div>
+								<div class="d-flex justify-content-between mt-4 titleLabel">
+									<div class="">
+										<label>Hobbies </label><br>
+  										<input type="checkbox" id="hobbiesOne" name="hobbies" value="Drawing">
+										<label for="vehicle1"> Drawing</label><br>
+  										<input type="checkbox" id="hobbiesTwo" name="hobbies" value="Dancing">
+  										<label for="vehicle2"> Dancing</label><br>
+  										<input type="checkbox" id="hobbiesThree" name="hobbies" value="Cooking">
+  										<label for="vehicle3"> Cooking</label><br>
+										<input type="checkbox" id="hobbiesFour" name="hobbies" value="Painting">
+										<label for="vehicle1">Painting</label><br>
+  										<input type="checkbox" id="hobbiesFive" name="hobbies" value="Singing">
+  										<label for="vehicle2"> Singing</label><br>
+  										<input type="checkbox" id="hobbiesSix" name="hobbies" value="Gardening">
+  										<label for="vehicle3"> Gardening</label><br>
+										<input type="checkbox" id="hobbiesSeven" name="hobbies" value="Swimming">
+  										<label for="vehicle2"> Swimming</label><br>
+  										<input type="checkbox" id="hobbiesEight" name="hobbies" value="Reading">
+  										<label for="vehicle3"> Reading</label><br>
+									</div>
+								</div><br>
 								<input type="hidden" name="personid" id="personid" value="0">
 								<input type="submit" class="btn btn-primary" id="formBtn" value="Submit">
-								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								<button type="button" class="btn btn-secondary" data-dismiss="modal" id="formClose">Close</button>
 							</form>
 							<p id="validationMessage"></p>
 						</div>
@@ -203,5 +224,7 @@
 		</div>
 		</body>
 		</html>
+	<cfelse>
+		<cflocation  url="/views/login.cfm">	
 	</cfif>
 </cfoutput>

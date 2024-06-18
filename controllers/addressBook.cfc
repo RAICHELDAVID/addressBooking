@@ -67,12 +67,15 @@ component{
     }
     
     public void function login(){
-        session.login=true;
+        if(session.login){
+           cflocation(url="./views/listPage.cfm");
+        }
     }
 
     remote void function logout(){
         structDelete(session,"login");
         session.login=false;
+        session.sso=false;
         cflocation(url="/views/login.cfm");
     }
 

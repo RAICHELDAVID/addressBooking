@@ -13,8 +13,11 @@
                     <tr>
                     <th></th>
                         <th>Name</th>
+                        <th>Gender</th>
+                        <th>Address</th>
                         <th>Email</th>
                         <th>Phone number</th>
+                        <th>Hobbies</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -23,9 +26,12 @@
                         <cfif session.userid eq person.getuserid()>
                             <tr>
                                 <td><img src="../assets/uploads/#person.getimage()#" alt="image" width="50" height="50"></td>
-                                <td>#person.getFname()# #person.getLname()#</td>
+                                <td style="padding:10px;">#person.getFname()# #person.getLname()#</td>
+                                <td style="padding:10px;">#person.getgender()#</td>
+                                <td>#person.getaddress()#,#person.getstreet()#,#person.getpincode()#</td>
                                 <td>#person.getemailID()#</td>
                                 <td>#person.getphone()#</td>
+                                <td>#person.gethobbies()#</td>
                             </tr>
                         <cfelse>
                             <cfcontinue>	
