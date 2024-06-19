@@ -140,22 +140,19 @@
 								<div class="d-flex justify-content-between mt-4 titleLabel">
 									<div class="">
 										<label>Hobbies </label><br>
-  										<input type="checkbox" id="hobbiesOne" name="hobbies" value="Drawing">
-										<label for="vehicle1"> Drawing</label><br>
-  										<input type="checkbox" id="hobbiesTwo" name="hobbies" value="Dancing">
-  										<label for="vehicle2"> Dancing</label><br>
-  										<input type="checkbox" id="hobbiesThree" name="hobbies" value="Cooking">
-  										<label for="vehicle3"> Cooking</label><br>
-										<input type="checkbox" id="hobbiesFour" name="hobbies" value="Painting">
-										<label for="vehicle1">Painting</label><br>
-  										<input type="checkbox" id="hobbiesFive" name="hobbies" value="Singing">
-  										<label for="vehicle2"> Singing</label><br>
-  										<input type="checkbox" id="hobbiesSix" name="hobbies" value="Gardening">
-  										<label for="vehicle3"> Gardening</label><br>
-										<input type="checkbox" id="hobbiesSeven" name="hobbies" value="Swimming">
-  										<label for="vehicle2"> Swimming</label><br>
-  										<input type="checkbox" id="hobbiesEight" name="hobbies" value="Reading">
-  										<label for="vehicle3"> Reading</label><br>
+  					
+										<div class="form-group">
+										<select class="selectpicker input-large" id="hobbies" multiple data-live-search="true">											
+											<option value="Drawing">Drawing</option>
+											<option value="Dancing">Dancing</option>
+											<option value="Singing">Singing</option>
+											<option value="Swimming">Swimming</option>
+											<option value="Reading">Reading</option>
+											<option value="Painting">Painting</option>
+											<option value="Cooking">Cooking</option>
+											<option value="Gardening">Gardening</option>
+    									</select>
+										</div>
 									</div>
 								</div><br>
 								<input type="hidden" name="personid" id="personid" value="0">

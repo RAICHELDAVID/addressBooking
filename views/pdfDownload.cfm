@@ -17,7 +17,7 @@
                         <th>Address</th>
                         <th>Email</th>
                         <th>Phone number</th>
-                        <th>Hobbies</th>
+<!---                         <th>Hobbies</th> --->
                     </tr>
                 </thead>
                 <tbody>
@@ -31,7 +31,7 @@
                                 <td>#person.getaddress()#,#person.getstreet()#,#person.getpincode()#</td>
                                 <td>#person.getemailID()#</td>
                                 <td>#person.getphone()#</td>
-                                <td>#person.gethobbies()#</td>
+<!---                                 <td>#person.gethobbies()#</td> --->
                             </tr>
                         <cfelse>
                             <cfcontinue>	

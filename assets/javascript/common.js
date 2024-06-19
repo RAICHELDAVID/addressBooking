@@ -98,13 +98,16 @@ $(document).ready(function () {
 		var strEmailID = $("#strEmailID").val().trim();
 		var intPhoneNumber = parseInt($("#intPhoneNumber").val().trim());
 		let hobbiesArray = [];
-		$("input:checkbox[name=hobbies]:checked").each(function() {
+		$("#hobbies option:selected").each(function() {
 			hobbiesArray.push($(this).val());
 		});
+
+		
 		if (strTitle === '' || strFirstName === '' || strLastName === '' || strGender === '' || strBirthday === '' || strAddress === '' || strStreet === '' || intPincode === '' || strEmailID === '' || intPhoneNumber === '') {
 			$("#validationMessage").text('All fields are required').css("color", "red");
 			return false;
 		}
+	
 		var formData = new FormData();
 		formData.append('personid', personid);
 		formData.append('strTitle', strTitle);
@@ -183,7 +186,6 @@ $(document).ready(function () {
 			dataType: "json",
 			success: function (response) {
 				if (response) {
-
 					$('#modalTitle').text('EDIT CONTACT')
 					$('#personid').val(response.personid);
 					$('#strTitle').val(response.title);
@@ -196,30 +198,11 @@ $(document).ready(function () {
 					$('#intPincode').val(response.pincode);
 					$('#strEmailID').val(response.emailID);
 					$('#intPhoneNumber').val(response.phone);
-				    if ($.inArray('Drawing', response.hobbies) !== -1) {
-						$('#hobbiesOne').prop('checked', true);
+				
+					if(response.hobbies!=""){
+						$('.filter-option-inner-inner').text(response.hobbies);
 					}
-					if ($.inArray('Dancing', response.hobbies) !== -1) {
-						$('#hobbiesTwo').prop('checked', true);
-					}
-					if ($.inArray('Cooking', response.hobbies) !== -1) {
-						$('#hobbiesThree').prop('checked', true);
-					}
-					if ($.inArray('Painting', response.hobbies) !== -1) {
-						$('#hobbiesFour').prop('checked', true);
-					}
-					if ($.inArray('Singing', response.hobbies) !== -1) {
-						$('#hobbiesFive').prop('checked', true);
-					}
-					if ($.inArray('Gardening', response.hobbies) !== -1) {
-						$('#hobbiesSix').prop('checked', true);
-					}
-					if ($.inArray('Swimming', response.hobbies) !== -1) {
-						$('#hobbiesSeven').prop('checked', true);
-					}
-					if ($.inArray('Reading', response.hobbies) !== -1) {
-						$('#hobbiesEight').prop('checked', true);
-					}
+					
 
 					$('#userImageEdit').attr('src', '../assets/uploads/' + response.image);
 				}
@@ -254,6 +237,8 @@ $(document).ready(function () {
 		}
 		return false;
 	});
+	
+
 	$('.viewLink').click(function (e) {
 		e.preventDefault();
 		var personid = $(this).attr('personid');
@@ -265,17 +250,34 @@ $(document).ready(function () {
 			},
 			dataType: "json",
 			success: function (response) {
-				var imageUrl = '../assets/uploads/' + response.DATA[0][7];
+				var imageUrl = '../assets/uploads/' + response.DATA[0][7]; 
+				var name = response.DATA[0][0]; 
+				var gender = response.DATA[0][1];
+				var dob = response.DATA[0][2]; 
+				var address = response.DATA[0][3]; 
+				var pincode = response.DATA[0][4]; 
+				var email = response.DATA[0][5]; 
+				var phone = response.DATA[0][6]; 
+				
 				$('#userImageView').attr('src', imageUrl);
-				var tableHtml = "<table>";
-				$.each(response.COLUMNS, function (index, columnName) {
-
-					tableHtml += "<tr>";
-					tableHtml += "<th>" + columnName + "</th>";
-					tableHtml += "<td>" + response.DATA[0][index] + "</td>";
-					tableHtml += "</tr>";
+				
+				var hobbiesHtml = "";
+				$.each(response.DATA, function (index, rowData) {
+					hobbiesHtml += rowData[8]; 
+					hobbiesHtml += "<br>";
 				});
+				
+				var tableHtml = "<table>";
+				tableHtml += "<tr><th>Name</th><td>" + name + "</td></tr>";
+				tableHtml += "<tr><th>Gender</th><td>" + gender + "</td></tr>";
+				tableHtml += "<tr><th>Date of Birth</th><td>" + dob + "</td></tr>";
+				tableHtml += "<tr><th>Address</th><td>" + address + "</td></tr>";
+				tableHtml += "<tr><th>Pincode</th><td>" + pincode + "</td></tr>";
+				tableHtml += "<tr><th>Email</th><td>" + email + "</td></tr>";
+				tableHtml += "<tr><th>Phone</th><td>" + phone + "</td></tr>";
+				tableHtml += "<tr><th>Hobbies</th><td>" + hobbiesHtml + "</td></tr>";
 				tableHtml += "</table>";
+				
 				$("#tableContainer").html(tableHtml);
 			},
 			error: function (xhr, textStatus, errorThrown) {
@@ -283,6 +285,11 @@ $(document).ready(function () {
 			}
 		});
 	});
+	
+	
+	
+	
+	
 	$('#print').click(function () {
 		printContent('landscape');
 	});
@@ -415,3 +422,6 @@ function signIn() {
 	});
 	$form.appendTo('body').submit();
 }
+
+
+
