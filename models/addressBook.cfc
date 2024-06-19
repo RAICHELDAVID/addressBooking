@@ -26,7 +26,7 @@
     <cffunction  name="selectData"  access="remote" returnformat="json">
         <cfargument name="personid" required="true" type="integer">
         <cfquery name="selectData" datasource="demo">
-            SELECT personid,title,Fname,Lname,gender,dob,address,street,pincode,emailID,phone,image,hobbies FROM person 
+            SELECT personid,title,Fname,Lname,gender,dob,address,street,pincode,emailID,phone,image FROM person 
             WHERE personid=<cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">
         </cfquery>
         <cfset parsedDate = ParseDateTime(selectData.dob)>
@@ -44,8 +44,14 @@
         <cfset responseData["emailID"] = selectData.emailID>
         <cfset responseData["phone"] = selectData.phone>
         <cfset responseData["image"] = selectData.image>
-        <cfset local.hobbiesArray = ListToArray(selectData.hobbies)>
-        <cfset responseData["hobbies"] = local.hobbiesArray>
+        <cfquery name="selectHobbies" datasource="demo">
+            SELECT hobby FROM hobbies 
+            WHERE personid=<cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">
+        </cfquery>
+       <cfset responseData["hobbies"] = []>
+        <cfoutput query="selectHobbies">
+            <cfset arrayAppend(responseData["hobbies"], selectHobbies.hobby)>
+        </cfoutput>
         <cfreturn responseData>
     </cffunction>
 
@@ -87,18 +93,34 @@
 
     <cffunction name="displayData" access="remote" returnformat="json">
         <cfargument name="personid" required="true" type="integer">
+        
         <cfquery name="displayDataQuery" datasource="demo">
-            SELECT  CONCAT(title,' ',Fname,' ',Lname) AS name,gender,dob,concat(address,' ',street) as address,pincode,emailID,phone,image,hobbies
-            FROM person 
-            WHERE personid = <cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">
+            SELECT CONCAT(p.title, ' ', p.Fname, ' ', p.Lname) AS name,
+                p.gender,
+                p.dob,
+                CONCAT(p.address, ' ', p.street) AS address,
+                p.pincode,
+                p.emailID,
+                p.phone,
+                p.image,
+                h.hobby
+            FROM person p
+            LEFT JOIN hobbies h ON p.personid = h.personid
+            WHERE p.personid = <cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">
         </cfquery>
         <cfreturn displayDataQuery>
     </cffunction>
 
+
     <cffunction name="deleteData" access="remote" returnformat="json">
         <cfargument name="personid" required="true" type="integer">
         <cfquery name="deleteData" datasource="demo">
-            DELETE FROM person WHERE personid=<cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">
+            DELETE FROM hobbies
+            WHERE personid = <cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">
+            DELETE FROM person
+            WHERE personid = <cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">
+
+
         </cfquery>
         <cfreturn {"message":true}>
     </cffunction>
@@ -119,8 +141,8 @@
         <cfargument name="hobbies" type="string" required="true">
 <!---         <cfdump  var="#arguments.hobbies#"> --->
         <cfset var formattedDate = DateFormat(arguments.strBirthday, "dd-mm-yyyy")>
-<!---    <cfset hobbyList = listToArray(arguments.hobbies)> --->
-<!---    <cfdump  var="#hobbyList#" abort> --->
+        <cfset local.hobbyList = listToArray(arguments.hobbies)>
+<!---         <cfdump  var="#hobbyList[1]#" abort> --->
         <cfif arguments.personid eq 0>
             <cfset local.uploadPath = expandPath("../assets/uploads/")>
             <cffile action="upload" destination="#local.uploadPath#" nameConflict="MakeUnique" filefield="pictureFile">
@@ -147,14 +169,30 @@
                 pincode = <cfqueryparam value="#arguments.intPincode#" cfsqltype="cf_sql_integer">,                
                 emailID = <cfqueryparam value="#arguments.strEmailID#" cfsqltype="cf_sql_varchar">,
                 phone = <cfqueryparam value="#arguments.intPhoneNumber#" cfsqltype="cf_sql_varchar">,
-                image = <cfqueryparam value="#local.image#" cfsqltype="cf_sql_varchar">,
-                hobbies=<cfqueryparam value="#arguments.hobbies#" cfsqltype="cf_sql_varchar">
+                image = <cfqueryparam value="#local.image#" cfsqltype="cf_sql_varchar">
+                <!---hobbies=<cfqueryparam value="#arguments.hobbies#" cfsqltype="cf_sql_varchar">--->
                 WHERE personid = <cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">
             </cfquery>
+            <cfquery name="deleteData" datasource="demo">
+                DELETE FROM hobbies
+                WHERE personid = <cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer"> 
+            </cfquery>
+            <cfif arrayLen(local.hobbyList) GT 0>
+                <cfloop from="1" to="#ArrayLen(local.hobbyList)#" index="i">
+                    <cfquery name="addHobbies" datasource="demo">
+                        INSERT INTO hobbies(personid,hobby)
+                        VALUES (
+                            <cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">,
+                            <cfqueryparam value="#local.hobbyList[i]#" cfsqltype="cf_sql_varchar">
+                        )
+                    </cfquery>
+                </cfloop>
+            </cfif>
+
             <cfreturn {"success": true, "message": "UPDATED!!"}>
         <cfelseif (arguments.personid eq 0)>
             <cfquery name="addPageQuery" datasource="demo">
-                INSERT INTO person(title, Fname, Lname, gender,dob, address, street, pincode, emailID, phone,image, userid,hobbies)
+                INSERT INTO person(title, Fname, Lname, gender,dob, address, street, pincode, emailID, phone,image, userid)
                 VALUES (
                     <cfqueryparam value="#arguments.strTitle#" cfsqltype="cf_sql_varchar">,
                     <cfqueryparam value="#arguments.strFirstName#" cfsqltype="cf_sql_varchar">,
@@ -167,10 +205,23 @@
                     <cfqueryparam value="#arguments.strEmailID#" cfsqltype="cf_sql_varchar">,
                     <cfqueryparam value="#arguments.intPhoneNumber#" cfsqltype="cf_sql_varchar">,
                     <cfqueryparam value="#local.image#" cfsqltype="cf_sql_varchar">,
-                    <cfqueryparam value="#session.userid#" cfsqltype="cf_sql_integer">,
-                    <cfqueryparam value="#arguments.hobbies#" cfsqltype="cf_sql_varchar">
+                    <cfqueryparam value="#session.userid#" cfsqltype="cf_sql_integer">
+                    <!---<cfqueryparam value="#arguments.hobbies#" cfsqltype="cf_sql_varchar">--->
                 )
+                    SELECT SCOPE_IDENTITY() AS personid
             </cfquery>
+            <cfset local.personid = addPageQuery.personid>
+            <cfloop from="1" to="#ArrayLen(local.hobbyList)#" index="i">
+                <cfquery name="addHobbies" datasource="demo">
+                    INSERT INTO hobbies(personid,hobby)
+                    VALUES (
+                        <cfqueryparam value="#local.personid#" cfsqltype="cf_sql_integer">,
+                        <cfqueryparam value="#local.hobbyList[i]#" cfsqltype="cf_sql_varchar">
+                    )
+                </cfquery>
+            </cfloop>
+
+
             <cfreturn {"success": true, "message": "Inserted!!"}>
         </cfif>
     </cffunction>
@@ -211,11 +262,11 @@
                 <cfset local.emailID = excelData.emailID>
                 <cfset local.phone = excelData.phone>
                 <cfset local.image = excelData.image>
-                <cfset local.hobbies = excelData.hobbies>
+<!---                 <cfset local.hobbies = excelData.hobbies> --->
                 <cfset local.emailExistQuery = isEmailExist(local.emailID)>
                 <cfif local.emailExistQuery.recordCount eq 0>
                 <cfquery datasource="demo">
-                    INSERT INTO person (title, Fname, Lname, gender, dob, address, street, pincode, emailID, phone, image, userid,hobbies)
+                    INSERT INTO person (title, Fname, Lname, gender, dob, address, street, pincode, emailID, phone, image, userid)
                     VALUES (
                         <cfqueryparam value="#local.title#" cfsqltype="cf_sql_varchar">,
                         <cfqueryparam value="#local.firstName#" cfsqltype="cf_sql_varchar">,
@@ -229,7 +280,7 @@
                         <cfqueryparam value="#local.phone#" cfsqltype="cf_sql_varchar">,
                         <cfqueryparam value="#local.image#" cfsqltype="cf_sql_varchar">,
                         <cfqueryparam value="#session.userid#" cfsqltype="cf_sql_integer">,
-                        <cfqueryparam value="#local.hobbies#" cfsqltype="cf_sql_varchar">
+                        -- <cfqueryparam value="#local.hobbies#" cfsqltype="cf_sql_varchar">
                     )
                     </cfquery>
                     <cfset local.insertedCount++>
