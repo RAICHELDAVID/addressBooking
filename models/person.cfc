@@ -13,7 +13,6 @@
         property name="phone";
         property name="image";
         property name="userid";
-        // property name= "hobbies";
 }
 </cfscript>
 
