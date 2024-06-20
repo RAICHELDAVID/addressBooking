@@ -11,13 +11,13 @@
             <table>
                 <thead>
                     <tr>
-                    <th></th>
+                        <th></th>
                         <th>Name</th>
                         <th>Gender</th>
                         <th>Address</th>
                         <th>Email</th>
                         <th>Phone number</th>
-<!---                         <th>Hobbies</th> --->
+                        <th>Hobbies</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,7 +31,14 @@
                                 <td>#person.getaddress()#,#person.getstreet()#,#person.getpincode()#</td>
                                 <td>#person.getemailID()#</td>
                                 <td>#person.getphone()#</td>
-<!---                                 <td>#person.gethobbies()#</td> --->
+                                <td>
+                                    <cfset hobbies = EntityLoad("hobbies", { person = person})>
+                                    <cfif arrayLen(hobbies)>
+                                        <cfloop array="#hobbies#" index="hobbies">
+                                            #hobbies.gethobby()#,
+                                        </cfloop>
+                                    </cfif>
+                               </td>    
                             </tr>
                         <cfelse>
                             <cfcontinue>	
