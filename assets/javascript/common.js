@@ -198,9 +198,9 @@ $(document).ready(function () {
 					$('#intPincode').val(response.pincode);
 					$('#strEmailID').val(response.emailID);
 					$('#intPhoneNumber').val(response.phone);
-				
+				// console.log(response.hobbies[1]);
 					if(response.hobbies!=""){
-						$('.filter-option-inner-inner').text(response.hobbies);
+						$('.filter-option-inner-inner').text(response.hobbies).css("color", "dimgrey");
 					}
 					
 
@@ -250,6 +250,7 @@ $(document).ready(function () {
 			},
 			dataType: "json",
 			success: function (response) {
+				console.log(response);
 				var imageUrl = '../assets/uploads/' + response.DATA[0][7]; 
 				var name = response.DATA[0][0]; 
 				var gender = response.DATA[0][1];
@@ -263,7 +264,8 @@ $(document).ready(function () {
 				
 				var hobbiesHtml = "";
 				$.each(response.DATA, function (index, rowData) {
-					hobbiesHtml += rowData[8]; 
+					
+					hobbiesHtml += rowData[9]; 
 					hobbiesHtml += "<br>";
 				});
 				
@@ -277,7 +279,7 @@ $(document).ready(function () {
 				tableHtml += "<tr><th>Phone</th><td>" + phone + "</td></tr>";
 				tableHtml += "<tr><th>Hobbies</th><td>" + hobbiesHtml + "</td></tr>";
 				tableHtml += "</table>";
-				
+				console.log(hobbiesHtml);
 				$("#tableContainer").html(tableHtml);
 			},
 			error: function (xhr, textStatus, errorThrown) {
@@ -286,9 +288,7 @@ $(document).ready(function () {
 		});
 	});
 	
-	
-	
-	
+
 	
 	$('#print').click(function () {
 		printContent('landscape');
