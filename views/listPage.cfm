@@ -143,14 +143,12 @@
   					
 										<div class="form-group">
 										<select class="selectpicker input-large" id="hobbies" multiple data-live-search="true">											
-											<option value="Drawing">Drawing</option>
-											<option value="Dancing">Dancing</option>
-											<option value="Singing">Singing</option>
-											<option value="Swimming">Swimming</option>
-											<option value="Reading">Reading</option>
-											<option value="Painting">Painting</option>
-											<option value="Cooking">Cooking</option>
-											<option value="Gardening">Gardening</option>
+											<option value="cricket">cricket</option>
+											<option value="swimming">swimming</option>
+											<option value="dancing">dancing</option>
+											<option value="reading">reading</option>
+											<option value="learning">learning</option>
+											<option value="surfing">surfing</option>
     									</select>
 										</div>
 									</div>
