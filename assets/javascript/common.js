@@ -238,7 +238,6 @@ $(document).ready(function () {
 		return false;
 	});
 	
-
 	$('.viewLink').click(function (e) {
 		e.preventDefault();
 		var personid = $(this).attr('personid');
@@ -249,8 +248,7 @@ $(document).ready(function () {
 				personid: personid
 			},
 			dataType: "json",
-			success: function (response) {
-				console.log(response);
+			success: function (response) {				
 				var imageUrl = '../assets/uploads/' + response.DATA[0][7]; 
 				var name = response.DATA[0][0]; 
 				var gender = response.DATA[0][1];
@@ -263,11 +261,14 @@ $(document).ready(function () {
 				$('#userImageView').attr('src', imageUrl);
 				
 				var hobbiesHtml = "";
-				$.each(response.DATA, function (index, rowData) {
-					
-					hobbiesHtml += rowData[9]; 
-					hobbiesHtml += "<br>";
-				});
+				
+				if (response.DATA.length > 0) {
+					for (var i = 0; i < response.DATA.length; i++) {
+						if (response.DATA[i][9]) {
+							hobbiesHtml += response.DATA[i][9] + "<br>";
+						}
+					}
+				}
 				
 				var tableHtml = "<table>";
 				tableHtml += "<tr><th>Name</th><td>" + name + "</td></tr>";
@@ -279,7 +280,7 @@ $(document).ready(function () {
 				tableHtml += "<tr><th>Phone</th><td>" + phone + "</td></tr>";
 				tableHtml += "<tr><th>Hobbies</th><td>" + hobbiesHtml + "</td></tr>";
 				tableHtml += "</table>";
-				console.log(hobbiesHtml);
+				
 				$("#tableContainer").html(tableHtml);
 			},
 			error: function (xhr, textStatus, errorThrown) {
@@ -288,7 +289,6 @@ $(document).ready(function () {
 		});
 	});
 	
-
 	
 	$('#print').click(function () {
 		printContent('landscape');
