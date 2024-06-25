@@ -1,5 +1,5 @@
-component persistent="true" table="hobbies" {
-    property name="hname" fieldtype="string";
-    property name="hid" fieldtype="many-to-one" cfc="hobbies" fkcolumn="hid";
+component persistent="true" table="hobbytable" {
+    property name="hid" fieldtype="id";
+    property name="hname";
 
 }
