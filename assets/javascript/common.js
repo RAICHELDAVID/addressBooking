@@ -97,17 +97,11 @@ $(document).ready(function () {
 		var intPincode = parseInt($("#intPincode").val().trim());
 		var strEmailID = $("#strEmailID").val().trim();
 		var intPhoneNumber = parseInt($("#intPhoneNumber").val().trim());
-		let hobbiesArray = [];
-		$("#hobbies option:selected").each(function() {
-			hobbiesArray.push($(this).val());
-		});
+		var hobbiesArray = [];
+        $("#hobbiesSelect option:selected").each(function() {
+            hobbiesArray.push($(this).val());
+        });
 
-		
-		if (strTitle === '' || strFirstName === '' || strLastName === '' || strGender === '' || strBirthday === '' || strAddress === '' || strStreet === '' || intPincode === '' || strEmailID === '' || intPhoneNumber === '') {
-			$("#validationMessage").text('All fields are required').css("color", "red");
-			return false;
-		}
-	
 		var formData = new FormData();
 		formData.append('personid', personid);
 		formData.append('strTitle', strTitle);
@@ -122,7 +116,6 @@ $(document).ready(function () {
 		formData.append('strEmailID', strEmailID);
 		formData.append('pictureFile', $('#pictureFile')[0].files[0]);
 		formData.append('hobbies', hobbiesArray.join(','));
-
 		$.ajax({
 			type: "POST",
 			url: "../controllers/addressBook.cfc?method=savePageValidation",
@@ -171,12 +164,57 @@ $(document).ready(function () {
 		e.preventDefault();
 		$("#formID").get(0).reset();
 		$('#userImageEdit').attr('src', '../assets/images/user.JPG');
+			$.ajax({
+				url: '../models/addressBook.cfc?method=getHobbies',
+				type: 'GET',
+				dataType: 'json',
+				success: function(response) {
+			
+					var hobbiesData = response.data.DATA;
+					var select = $('#hobbiesSelect');
+					for (var i = 0; i < hobbiesData.length; i++) {
+						var hid = hobbiesData[i][0]; 
+						var hname = hobbiesData[i][1];
+						select.append('<option value="' + hid + '">' + hname + '</option>');
+					}
 
-	});
+				},
+			
+				error: function(xhr, status, error) {
+					console.error('Error fetching hobbies:', error);
+				}
+			});
+		});
+		
+	
 	
 	$('.editModalBtn').click(function (e) {
 		e.preventDefault();
 		var personid = $(this).attr('personid');
+		$.ajax({
+			url: '../models/addressBook.cfc?method=getHobbies',
+			type: 'GET',
+			dataType: 'json',
+			success: function(response) {
+		
+				var hobbiesData = response.data.DATA;
+		
+				var select = $('#hobbiesSelect');
+		
+				select.empty();
+		
+				for (var i = 0; i < hobbiesData.length; i++) {
+					var hid = hobbiesData[i][0]; 
+					var hname = hobbiesData[i][1];
+					select.append('<option value="' + hid + '">' + hname + '</option>');
+				}
+
+			},
+		
+			error: function(xhr, status, error) {
+				console.error('Error fetching hobbies:', error);
+			}
+		});
 		$.ajax({
 			type: "POST",
 			url: "../models/addressBook.cfc?method=selectData",
@@ -198,18 +236,21 @@ $(document).ready(function () {
 					$('#intPincode').val(response.pincode);
 					$('#strEmailID').val(response.emailID);
 					$('#intPhoneNumber').val(response.phone);
-				// console.log(response.hobbies[1]);
-					if(response.hobbies!=""){
-						$('.filter-option-inner-inner').text(response.hobbies).css("color", "dimgrey");
-					}
-					
-
+					if (response.hobbies && response.hobbies.length > 0) {
+                        response.hobbies.forEach(function(hobbyName) {
+                            $('#hobbiesSelect option').filter(function() {
+                                return $(this).text() === hobbyName;
+                            }).prop('selected', true);
+                        });
+                    }		
+			
 					$('#userImageEdit').attr('src', '../assets/uploads/' + response.image);
 				}
 			}
 		});
 	});
 
+	
 	$('#formClose').click(function (e) {
 		e.preventDefault();
 		$("#formID").get(0).reset();

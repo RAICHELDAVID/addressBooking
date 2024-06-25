@@ -140,17 +140,7 @@
 								<div class="d-flex justify-content-between mt-4 titleLabel">
 									<div class="">
 										<label>Hobbies </label><br>
-  					
-										<div class="form-group">
-										<select class="selectpicker input-large" id="hobbies" multiple data-live-search="true">											
-											<option value="cricket">cricket</option>
-											<option value="swimming">swimming</option>
-											<option value="dancing">dancing</option>
-											<option value="reading">reading</option>
-											<option value="learning">learning</option>
-											<option value="surfing">surfing</option>
-    									</select>
-										</div>
+     									<select multiple id="hobbiesSelect" name="hobbies"></select>
 									</div>
 								</div><br>
 								<input type="hidden" name="personid" id="personid" value="0">
