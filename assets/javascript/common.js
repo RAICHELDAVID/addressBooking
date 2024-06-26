@@ -160,33 +160,29 @@ $(document).ready(function () {
 			}
 		});
 	}
-	$('.createBtn').click(function (e) {
-		e.preventDefault();
-		$("#formID").get(0).reset();
-		$('#userImageEdit').attr('src', '../assets/images/user.JPG');
-			$.ajax({
-				url: '../models/addressBook.cfc?method=getHobbies',
-				type: 'GET',
-				dataType: 'json',
-				success: function(response) {
-			
-					var hobbiesData = response.data.DATA;
-					var select = $('#hobbiesSelect');
-					for (var i = 0; i < hobbiesData.length; i++) {
-						var hid = hobbiesData[i][0]; 
-						var hname = hobbiesData[i][1];
-						select.append('<option value="' + hid + '">' + hname + '</option>');
-					}
-
-				},
-			
-				error: function(xhr, status, error) {
-					console.error('Error fetching hobbies:', error);
-				}
-			});
-		});
-		
-	
+	$('.createBtn').click(function(e) {
+    e.preventDefault();
+    $("#formID").get(0).reset();
+    $('#userImageEdit').attr('src', '../assets/images/user.JPG');
+    
+    $.ajax({
+        url: '../models/addressBook.cfc?method=getHobbies',
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            var hobbiesData = response;
+            var select = $('#hobbiesSelect');
+            $.each(hobbiesData, function(index, hobby) {
+                var hid = hobby.hid;
+                var hname = hobby.hname;
+                select.append('<option value="' + hid + '">' + hname + '</option>');
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching hobbies:', error);
+        }
+    });
+});
 	
 	$('.editModalBtn').click(function (e) {
 		e.preventDefault();
@@ -196,18 +192,14 @@ $(document).ready(function () {
 			type: 'GET',
 			dataType: 'json',
 			success: function(response) {
-		
-				var hobbiesData = response.data.DATA;
-		
+				var hobbiesData = response;
 				var select = $('#hobbiesSelect');
-		
 				select.empty();
-		
-				for (var i = 0; i < hobbiesData.length; i++) {
-					var hid = hobbiesData[i][0]; 
-					var hname = hobbiesData[i][1];
+	            $.each(hobbiesData, function(index, hobby) {
+					var hid = hobby.hid;
+					var hname = hobby.hname;
 					select.append('<option value="' + hid + '">' + hname + '</option>');
-				}
+				});
 
 			},
 		
@@ -255,7 +247,7 @@ $(document).ready(function () {
 		e.preventDefault();
 		$("#formID").get(0).reset();
 	});
-
+	
 	$('.deleteLink').click(function (e) {
 		e.preventDefault();
 		var personid = $(this).attr('personid');

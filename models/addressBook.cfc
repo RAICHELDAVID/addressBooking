@@ -95,24 +95,23 @@
 
     <cffunction name="displayData" access="remote" returnformat="json">
         <cfargument name="personid" required="true" type="integer">
-        
- <cfquery name="displayDataQuery">
-    SELECT CONCAT(p.title, ' ', p.Fname, ' ', p.Lname) AS name,
-        p.gender,
-        p.dob,
-        CONCAT(p.address, ' ', p.street) AS address,
-        p.pincode,
-        p.emailID,
-        p.phone,
-        p.image,
-        h.hid,
-        ht.hname AS hobbyName  
-    FROM person p
-    LEFT JOIN person_hobbies h ON p.personid = h.personid
-    LEFT JOIN hobbyTable ht ON h.hid = ht.hid  
-    WHERE p.personid = <cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">
-</cfquery>
-<cfreturn displayDataQuery>
+        <cfquery name="displayDataQuery">
+            SELECT CONCAT(p.title, ' ', p.Fname, ' ', p.Lname) AS name,
+                p.gender,
+                p.dob,
+                CONCAT(p.address, ' ', p.street) AS address,
+                p.pincode,
+                p.emailID,
+                p.phone,
+                p.image,
+                h.hid,
+                ht.hname AS hobbyName  
+            FROM person p
+            LEFT JOIN person_hobbies h ON p.personid = h.personid
+            LEFT JOIN hobbyTable ht ON h.hid = ht.hid  
+            WHERE p.personid = <cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">
+        </cfquery>
+        <cfreturn displayDataQuery>
     </cffunction>
 
 
@@ -123,8 +122,6 @@
             WHERE personid = <cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">
             DELETE FROM person
             WHERE personid = <cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">
-
-
         </cfquery>
         <cfreturn {"message":true}>
     </cffunction>
@@ -177,37 +174,30 @@
                 image = <cfqueryparam value="#local.image#" cfsqltype="cf_sql_varchar">
                 WHERE personid = <cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">
             </cfquery>
-      
 
             <cfquery name="local.getExistingHobbies">
                 SELECT hid
                 FROM person_hobbies 
                 WHERE personid = <cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">
             </cfquery>
-
-            <cfloop query="local.getExistingHobbies">
-                <cfif  listFind(local.hobbyList, local.getExistingHobbies.hid)>
+            <cfset local.existingHobbiesList = ValueList(local.getExistingHobbies.hid)>
+            <cfloop list="#local.hobbyList#" index="hobby">
+                <cfif not listFind(local.existingHobbiesList, hobby)>
                     <cfquery>
-                        DELETE FROM person_hobbies
-                        WHERE personid = <cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">
-                        AND hid = <cfqueryparam value="#local.getExistingHobbies.hid#" cfsqltype="cf_sql_integer">
+                        INSERT INTO person_hobbies (personid, hid)
+                        VALUES (
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.personid#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#hobby#">
+                        )
                     </cfquery>
                 </cfif>
             </cfloop>
-            <cfloop list="#local.hobbyList#" index="hobby">
-                <cfquery>
-                    INSERT INTO person_hobbies (personid, hid)
-                    VALUES (
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.personid#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#hobby#">
-                    )
-                </cfquery>
-            </cfloop>
+
             <cfquery name="deleteHobbies">
                 DELETE FROM person_hobbies
                 WHERE personid = <cfqueryparam value="#arguments.personid#" cfsqltype="cf_sql_integer">
                 AND hid NOT IN (
-                    (<cfqueryparam value="#local.hobbyList#" cfsqltype="cf_sql_varchar" list="true">)
+                    <cfqueryparam value="#local.hobbyList#" cfsqltype="cf_sql_integer" list="true">
                 )
             </cfquery>
             <cfreturn {"success": true, "message": "UPDATED!!"}>
@@ -243,16 +233,22 @@
             <cfreturn {"success": true, "message": "Inserted!!"}>
         </cfif>
     </cffunction>
-
+    
     <cffunction name="getHobbies" access="remote" returnformat="json">
-        <cfset var result = {}>
-        <cfquery name="qHobbies" datasource="demo">
+        <cfset var result = []> 
+        <cfquery name="local.hobbies" datasource="demo">
             SELECT hid, hname
             FROM hobbyTable
             ORDER BY hname
         </cfquery>
-        <cfset result["data"] = qHobbies>
-        <cfreturn SerializeJSON(result)>
+        <cfloop query="local.hobbies">
+            <cfset hobby = {
+                "hid": local.hobbies.hid,
+                "hname": local.hobbies.hname
+            }>
+            <cfset arrayAppend(result, hobby)>
+        </cfloop>
+        <cfreturn serializeJSON(result)>
     </cffunction>
 
     <cffunction name="excelRead" access="remote" returnformat="json">
