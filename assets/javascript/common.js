@@ -353,10 +353,13 @@ $(document).ready(function () {
 		head.appendChild(style);
 		window.print();
 	}
-
 	$('.uploadBtn').click(function (e) {
 		e.preventDefault();
 		var excelFile = $('#excelFile')[0].files[0];
+		if (!excelFile) {
+			alert("Please choose an Excel file.");
+			return;
+		}
 		var formData = new FormData();
 		formData.append('excelFile', excelFile);
 		$.ajax({
@@ -368,17 +371,11 @@ $(document).ready(function () {
 			dataType: 'json',
 			success: function (response) {
 				if (response.success==true) {
-					alert(response.message);
-					window.location.href = "listPage.cfm";
-
-				}
-				else if(response.success==false){
-					alert(response.message);
+					window.location.href = "/views/resultExcel.cfm";
 				}
 			}
 		});
 	});
-
 });
 
 $(document).ready(function () {

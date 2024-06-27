@@ -60,9 +60,7 @@
     <cffunction  name="isEmailExist" returntype="query">
         <cfargument  name="strEmailID" required="true" type="string">
         <cfquery name="getEmail">
-            SELECT emailID FROM person
-            WHERE emailID=<cfqueryparam value="#arguments.strEmailID#" cfsqltype="cf_sql_varchar"> UNION
-            SELECT emailID FROM usertable
+            SELECT 1 FROM person
             WHERE emailID=<cfqueryparam value="#arguments.strEmailID#" cfsqltype="cf_sql_varchar">
         </cfquery>
         <cfreturn getEmail>
@@ -113,7 +111,6 @@
         </cfquery>
         <cfreturn displayDataQuery>
     </cffunction>
-
 
     <cffunction name="deleteData" access="remote" returnformat="json">
         <cfargument name="personid" required="true" type="integer">
@@ -255,58 +252,109 @@
         <cfargument name="excelFile" required="true" type="any">
         <cfset local.path = ExpandPath("../assets/uploads/")>
         <cffile action="upload" destination="#local.path#" nameconflict='makeunique'>
-        <cfset local.uploadFile = cffile.serverDirectory & "/" & cffile.serverFile>
-        <cfspreadsheet action="read" src="#local.uploadFile#" query="excelData" headerrow="1" rows='2-100'>
-        <cfset local.columnNames = []>
-        <cfloop list="#excelData.ColumnList#" index="columnName">
-            <cfset arrayAppend(local.columnNames, columnName)>
-        </cfloop>
-        <cfset local.arrayCount = arrayLen(local.columnNames)>
-        <cfset ArraySort(local.columnNames, "text")>
-        <cfquery name="getResult">
-            SELECT column_name
-            FROM INFORMATION_SCHEMA.COLUMNS
-            WHERE TABLE_NAME = 'person'
-            AND column_name NOT IN ('personid', 'userid')
+        <cfset session.uploadedFilePath = cffile.serverDirectory & "/" & cffile.serverFile>
+        <cfspreadsheet action="read" src="#session.uploadedFilePath#" query="excelData" headerrow="1" rows="2-100">
+        <cfset local.result = []>
+        <cfset local.hobbyValidation = []>
+        <cfquery name="deleteExistingExcelPerson">
+            DELETE FROM excelPerson
         </cfquery>
-        <cfset local.recordCount = getResult.RecordCount>
-        <cfset local.insertedCount = 0>
-        <cfset local.skippedCount = 0>
-            <cfloop query="excelData">
-                <cfset local.title = excelData.title>
-                <cfset local.firstName = excelData.Fname>
-                <cfset local.lastName = excelData.Lname>
-                <cfset local.gender = excelData.gender>
-                <cfset local.dob = excelData.dob>
-                <cfset local.address = excelData.address>
-                <cfset local.street = excelData.street>
-                <cfset local.pincode = excelData.pincode>
-                <cfset local.emailID = excelData.emailID>
-                <cfset local.phone = excelData.phone>
-                <cfset local.image = excelData.image>
-                <cfset local.hobbies = excelData.hobbies> 
-                <cfset local.emailExistQuery = isEmailExist(local.emailID)>
-                <cfif local.emailExistQuery.recordCount eq 0>
-                    <cfquery name="result">
-                        INSERT INTO person (title, Fname, Lname, gender, dob, address, street, pincode, emailID, phone, userid,image)
-                        VALUES (
-                            <cfqueryparam value="#local.title#" cfsqltype="cf_sql_varchar">,
-                            <cfqueryparam value="#local.firstName#" cfsqltype="cf_sql_varchar">,
-                            <cfqueryparam value="#local.lastName#" cfsqltype="cf_sql_varchar">,
-                            <cfqueryparam value="#local.gender#" cfsqltype="cf_sql_varchar">,
-                            <cfqueryparam value="#local.dob#" cfsqltype="cf_sql_varchar">,
-                            <cfqueryparam value="#local.address#" cfsqltype="cf_sql_varchar">,
-                            <cfqueryparam value="#local.street#" cfsqltype="cf_sql_varchar">,
-                            <cfqueryparam value="#local.pincode#" cfsqltype="cf_sql_integer">,
-                            <cfqueryparam value="#local.emailID#" cfsqltype="cf_sql_varchar">,
-                            <cfqueryparam value="#local.phone#" cfsqltype="cf_sql_varchar">,
-                            <cfqueryparam value="#session.userid#" cfsqltype="cf_sql_integer">,
-                            <cfqueryparam value="#local.image#" cfsqltype="cf_sql_varchar">
-                        )
-                            SELECT SCOPE_IDENTITY() AS personid
+        <cfset local.excelHeaders = excelData.getColumnNames()>
+        <cfloop query="excelData">
+            <cfif not len(trim(excelData.title))>
+                <cfset arrayAppend(local.result, local.excelHeaders[1] &" missing")>
+            </cfif>
+            <cfif not len(trim(excelData.Fname))>
+                <cfset arrayAppend(local.result, local.excelHeaders[2] &" missing")>
+            </cfif>
+            <cfif not len(trim(excelData.Lname))>
+                <cfset arrayAppend(local.result, local.excelHeaders[3] &" missing")>
+            </cfif>
+            <cfif not len(trim(excelData.gender))>
+                <cfset arrayAppend(local.result, local.excelHeaders[4] &" missing")>
+            </cfif>
+            <cfif not len(excelData.dob)>
+                <cfset arrayAppend(local.result, local.excelHeaders[5] &" missing")>
+            </cfif>
+            <cfif not len(trim(excelData.address))>
+                <cfset arrayAppend(local.result, local.excelHeaders[6] &" missing")>
+            </cfif>
+            <cfif not len(trim(excelData.street))>
+                <cfset arrayAppend(local.result, local.excelHeaders[7] &" missing")>
+            </cfif>
+            <cfif not len(excelData.pincode)>
+                <cfset arrayAppend(local.result, local.excelHeaders[8] &" missing")>
+            </cfif>
+            <cfif not len(excelData.phone)>
+                <cfset arrayAppend(local.result, local.excelHeaders[10] &" missing")>
+            </cfif>
+            <cfif not len(excelData.image)>
+                <cfset arrayAppend(local.result, local.excelHeaders[11] &" missing")>
+            </cfif>
+            <cfif not len(excelData.hobbies)>
+                <cfset arrayAppend(local.result, local.excelHeaders[12] & " missing")>
+            <cfelse>
+                <cfloop list="#excelData.hobbies#" index="hobby">
+                    <cfquery name="local.hobbyInDatabase">
+                        SELECT hname
+                        FROM hobbyTable
+                        WHERE hname = <cfqueryparam value="#hobby#" cfsqltype="cf_sql_varchar">
                     </cfquery>
-                    <cfset local.personID = result.personid>
-                    <cfset local.hobbyList = listToArray(local.hobbies, ",")>
+                    <cfif local.hobbyInDatabase.recordCount eq 0>
+                        <cfset arrayAppend(local.hobbyValidation, "cannot add Hobby '#hobby#'")>
+                    </cfif>
+                </cfloop>
+            </cfif>
+            <cfset var local.formattedDate = DateFormat(excelData.dob, "dd-mm-yyyy")>
+            <cfif not len(excelData.emailID)>
+                <cfset arrayAppend(local.result, local.excelHeaders[9] &" missing")>
+            <cfelse>
+                <cfquery name="local.getEmail">
+                    SELECT personid FROM person
+                    WHERE emailID=<cfqueryparam value="#excelData.emailID#" cfsqltype="cf_sql_varchar">
+                </cfquery> 
+                <cfif local.getEmail.recordCount gt 0 && arrayIsEmpty(local.result)>
+                    <cfquery name="editPageQuery">
+                        UPDATE person
+                        SET
+                        title = <cfqueryparam value="#excelData.title#" cfsqltype="cf_sql_varchar">,
+                        Fname = <cfqueryparam value="#excelData.Fname#" cfsqltype="cf_sql_varchar">,
+                        Lname = <cfqueryparam value="#excelData.Lname#" cfsqltype="cf_sql_varchar">,
+                        gender = <cfqueryparam value="#excelData.gender#" cfsqltype="cf_sql_varchar">,
+                        dob = <cfqueryparam value="#local.formattedDate#" cfsqltype="cf_sql_date">,
+                        address = <cfqueryparam value="#excelData.address#" cfsqltype="cf_sql_varchar">,
+                        street = <cfqueryparam value="#excelData.street#" cfsqltype="cf_sql_varchar">,
+                        pincode = <cfqueryparam value="#excelData.pincode#" cfsqltype="cf_sql_integer">,
+                        emailID = <cfqueryparam value="#excelData.emailID#" cfsqltype="cf_sql_varchar">,
+                        phone = <cfqueryparam value="#excelData.phone#" cfsqltype="cf_sql_varchar">,
+                        image = <cfqueryparam value="#excelData.image#" cfsqltype="cf_sql_varchar">
+                        WHERE personid = <cfqueryparam value="#local.getEmail.personid#" cfsqltype="cf_sql_integer">
+                    </cfquery>
+                    <cfset arrayAppend(local.result,"updated")>
+                </cfif>
+                
+            </cfif>
+            <cfif arrayIsEmpty(local.result)>
+                <cfquery name="local.person">
+                    INSERT INTO person (title, Fname, Lname, gender, dob, address, street, pincode, emailID, phone, userid, image)
+                    VALUES (
+                        <cfqueryparam value="#excelData.title#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#excelData.Fname#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#excelData.Lname#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#excelData.gender#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#excelData.dob#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#excelData.address#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#excelData.street#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#excelData.pincode#" cfsqltype="cf_sql_integer">,
+                        <cfqueryparam value="#excelData.emailID#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#excelData.phone#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#session.userid#" cfsqltype="cf_sql_integer">,
+                        <cfqueryparam value="#excelData.image#" cfsqltype="cf_sql_varchar">
+                    )
+                        SELECT SCOPE_IDENTITY() AS personid
+                </cfquery>
+                    <cfset local.personID = local.person.personid>
+                    <cfset local.hobbyList = listToArray(excelData.hobbies, ",")>
                     <cfloop array="#local.hobbyList#" index="hobby">
                         <cfquery  name="getHid">
                             SELECT hid
@@ -323,16 +371,36 @@
                             </cfquery>
                         </cfif>
                     </cfloop>
-                <cfset local.insertedCount++>
-                <cfelse>
-                    <cfset local.skippedCount++>
-                    <cfcontinue>
-                </cfif>
-            </cfloop>
-    
-        <cfreturn {"success": true, "message": "#local.insertedCount# rows inserted, #local.skippedCount# rows skipped due to duplicate emails."}>
+                    <cfset arrayAppend(local.result,"added")>
+            </cfif>
+            <cfif !arrayIsEmpty(local.result)>
+               <cfloop array="#local.hobbyValidation#" index="item">
+                    <cfset arrayAppend(local.result, item)>
+                </cfloop>
+                <cfquery name="insertValidationData">
+                    INSERT INTO excelPerson (title, Fname, Lname, gender, dob, address, street, pincode, emailID, phone, image,hobbies, ValidationResult)
+                    VALUES (
+                        <cfqueryparam value="#excelData.title#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#excelData.Fname#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#excelData.Lname#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#excelData.gender#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#excelData.dob#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#excelData.address#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#excelData.street#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#excelData.pincode#" cfsqltype="cf_sql_integer">,
+                        <cfqueryparam value="#excelData.emailID#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#excelData.phone#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#excelData.image#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#excelData.hobbies#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#arrayToList(local.result)#" cfsqltype="cf_sql_varchar">
+                    )
+                </cfquery>
+                <cfset arrayClear(local.result)>
+                <cfset arrayClear(local.hobbyValidation)>
+            </cfif>
+        </cfloop>
+        <cfreturn {"success": true}>
     </cffunction>
-
     <cffunction name="googleLogin" access="remote" returnType="query">
         <cfargument name="emailID" required="true" type="string">
         <cfquery name="googleLogin" >

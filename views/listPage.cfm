@@ -38,6 +38,10 @@
 							<h5 class="modal-title text-center mt-3" id="exampleModalLabel">UPLOAD EXCEL</h5>
 						</div>
 						<div class="modal-body">
+						<div class="float-end">
+							<a href="dataExcelRead.cfm" target="_blank" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Template with data</a>
+							<a href="plainExcelRead.cfm" target="_blank" class="btn btn-success btn-lg active" role="button" aria-pressed="true">Plain template</a>
+						</div>
 							<form action="listPage.cfm" method="post" enctype="multipart/form-data" id="formUpload">
 								<div class="d-flex flex-column">
 									<label>Upload File</label>
@@ -46,6 +50,7 @@
 							</form>
 							<p id="validationMessageExcel"></p>
 						</div>
+<!--- 						<a href="resultExcel.cfm" target="_blank" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Result</a> --->
 						<div class="modal-footer">
 							<button type="button" class="btn btn-primary uploadBtn">UPLOAD</button>
 							<button type="button" class="btn btn-secondary" data-dismiss="modal">CLOSE</button>
