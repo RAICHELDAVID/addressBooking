@@ -97,17 +97,11 @@ $(document).ready(function () {
 		var intPincode = parseInt($("#intPincode").val().trim());
 		var strEmailID = $("#strEmailID").val().trim();
 		var intPhoneNumber = parseInt($("#intPhoneNumber").val().trim());
-		let hobbiesArray = [];
-		$("#hobbies option:selected").each(function() {
-			hobbiesArray.push($(this).val());
-		});
+		var hobbiesArray = [];
+        $("#hobbiesSelect option:selected").each(function() {
+            hobbiesArray.push($(this).val());
+        });
 
-		
-		if (strTitle === '' || strFirstName === '' || strLastName === '' || strGender === '' || strBirthday === '' || strAddress === '' || strStreet === '' || intPincode === '' || strEmailID === '' || intPhoneNumber === '') {
-			$("#validationMessage").text('All fields are required').css("color", "red");
-			return false;
-		}
-	
 		var formData = new FormData();
 		formData.append('personid', personid);
 		formData.append('strTitle', strTitle);
@@ -122,7 +116,6 @@ $(document).ready(function () {
 		formData.append('strEmailID', strEmailID);
 		formData.append('pictureFile', $('#pictureFile')[0].files[0]);
 		formData.append('hobbies', hobbiesArray.join(','));
-
 		$.ajax({
 			type: "POST",
 			url: "../controllers/addressBook.cfc?method=savePageValidation",
@@ -167,16 +160,53 @@ $(document).ready(function () {
 			}
 		});
 	}
-	$('.createBtn').click(function (e) {
-		e.preventDefault();
-		$("#formID").get(0).reset();
-		$('#userImageEdit').attr('src', '../assets/images/user.JPG');
-
-	});
+	$('.createBtn').click(function(e) {
+    e.preventDefault();
+    $("#formID").get(0).reset();
+    $('#userImageEdit').attr('src', '../assets/images/user.JPG');
+    
+    $.ajax({
+        url: '../models/addressBook.cfc?method=getHobbies',
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            var hobbiesData = response;
+            var select = $('#hobbiesSelect');
+            $.each(hobbiesData, function(index, hobby) {
+                var hid = hobby.hid;
+                var hname = hobby.hname;
+                select.append('<option value="' + hid + '">' + hname + '</option>');
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching hobbies:', error);
+        }
+    });
+});
 	
 	$('.editModalBtn').click(function (e) {
 		e.preventDefault();
 		var personid = $(this).attr('personid');
+		$.ajax({
+			url: '../models/addressBook.cfc?method=getHobbies',
+			type: 'GET',
+			dataType: 'json',
+			success: function(response) {
+				var hobbiesData = response;
+				var select = $('#hobbiesSelect');
+				select.empty();
+	            $.each(hobbiesData, function(index, hobby) {
+					var hid = hobby.hid;
+					var hname = hobby.hname;
+					select.append('<option value="' + hid + '">' + hname + '</option>');
+				});
+
+			},
+		
+			error: function(xhr, status, error) {
+				console.error('Error fetching hobbies:', error);
+			}
+		});
 		$.ajax({
 			type: "POST",
 			url: "../models/addressBook.cfc?method=selectData",
@@ -198,23 +228,26 @@ $(document).ready(function () {
 					$('#intPincode').val(response.pincode);
 					$('#strEmailID').val(response.emailID);
 					$('#intPhoneNumber').val(response.phone);
-				// console.log(response.hobbies[1]);
-					if(response.hobbies!=""){
-						$('.filter-option-inner-inner').text(response.hobbies).css("color", "dimgrey");
-					}
-					
-
+					if (response.hobbies && response.hobbies.length > 0) {
+                        response.hobbies.forEach(function(hobbyName) {
+                            $('#hobbiesSelect option').filter(function() {
+                                return $(this).text() === hobbyName;
+                            }).prop('selected', true);
+                        });
+                    }		
+			
 					$('#userImageEdit').attr('src', '../assets/uploads/' + response.image);
 				}
 			}
 		});
 	});
 
+	
 	$('#formClose').click(function (e) {
 		e.preventDefault();
 		$("#formID").get(0).reset();
 	});
-
+	
 	$('.deleteLink').click(function (e) {
 		e.preventDefault();
 		var personid = $(this).attr('personid');
@@ -238,7 +271,6 @@ $(document).ready(function () {
 		return false;
 	});
 	
-
 	$('.viewLink').click(function (e) {
 		e.preventDefault();
 		var personid = $(this).attr('personid');
@@ -249,8 +281,7 @@ $(document).ready(function () {
 				personid: personid
 			},
 			dataType: "json",
-			success: function (response) {
-				console.log(response);
+			success: function (response) {				
 				var imageUrl = '../assets/uploads/' + response.DATA[0][7]; 
 				var name = response.DATA[0][0]; 
 				var gender = response.DATA[0][1];
@@ -263,11 +294,14 @@ $(document).ready(function () {
 				$('#userImageView').attr('src', imageUrl);
 				
 				var hobbiesHtml = "";
-				$.each(response.DATA, function (index, rowData) {
-					
-					hobbiesHtml += rowData[9]; 
-					hobbiesHtml += "<br>";
-				});
+				
+				if (response.DATA.length > 0) {
+					for (var i = 0; i < response.DATA.length; i++) {
+						if (response.DATA[i][9]) {
+							hobbiesHtml += response.DATA[i][9] + "<br>";
+						}
+					}
+				}
 				
 				var tableHtml = "<table>";
 				tableHtml += "<tr><th>Name</th><td>" + name + "</td></tr>";
@@ -279,7 +313,7 @@ $(document).ready(function () {
 				tableHtml += "<tr><th>Phone</th><td>" + phone + "</td></tr>";
 				tableHtml += "<tr><th>Hobbies</th><td>" + hobbiesHtml + "</td></tr>";
 				tableHtml += "</table>";
-				console.log(hobbiesHtml);
+				
 				$("#tableContainer").html(tableHtml);
 			},
 			error: function (xhr, textStatus, errorThrown) {
@@ -288,7 +322,6 @@ $(document).ready(function () {
 		});
 	});
 	
-
 	
 	$('#print').click(function () {
 		printContent('landscape');
@@ -320,10 +353,13 @@ $(document).ready(function () {
 		head.appendChild(style);
 		window.print();
 	}
-
 	$('.uploadBtn').click(function (e) {
 		e.preventDefault();
 		var excelFile = $('#excelFile')[0].files[0];
+		if (!excelFile) {
+			alert("Please choose an Excel file.");
+			return;
+		}
 		var formData = new FormData();
 		formData.append('excelFile', excelFile);
 		$.ajax({
@@ -335,17 +371,11 @@ $(document).ready(function () {
 			dataType: 'json',
 			success: function (response) {
 				if (response.success==true) {
-					alert(response.message);
-					window.location.href = "listPage.cfm";
-
-				}
-				else if(response.success==false){
-					alert(response.message);
+					window.location.href = "/views/resultExcel.cfm";
 				}
 			}
 		});
 	});
-
 });
 
 $(document).ready(function () {
