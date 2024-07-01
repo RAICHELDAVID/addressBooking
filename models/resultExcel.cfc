@@ -14,5 +14,6 @@
         property name="image";
         property name="hobbies";
         property name="ValidationResult";
+        property name="userid";
 }
 </cfscript>

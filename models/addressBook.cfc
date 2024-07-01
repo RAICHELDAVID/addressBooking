@@ -258,6 +258,7 @@
         <cfset local.hobbyValidation = []>
         <cfquery name="deleteExistingExcelPerson">
             DELETE FROM excelPerson
+            WHERE userid=<cfqueryparam value="#session.userid#" cfsqltype="cf_sql_integer">
         </cfquery>
         <cfset local.excelHeaders = excelData.getColumnNames()>
         <cfloop query="excelData">
@@ -378,7 +379,7 @@
                     <cfset arrayAppend(local.result, item)>
                 </cfloop>
                 <cfquery name="insertValidationData">
-                    INSERT INTO excelPerson (title, Fname, Lname, gender, dob, address, street, pincode, emailID, phone, image,hobbies, ValidationResult)
+                    INSERT INTO excelPerson (title, Fname, Lname, gender, dob, address, street, pincode, emailID, phone, image,hobbies, ValidationResult,userid)
                     VALUES (
                         <cfqueryparam value="#excelData.title#" cfsqltype="cf_sql_varchar">,
                         <cfqueryparam value="#excelData.Fname#" cfsqltype="cf_sql_varchar">,
@@ -392,7 +393,8 @@
                         <cfqueryparam value="#excelData.phone#" cfsqltype="cf_sql_varchar">,
                         <cfqueryparam value="#excelData.image#" cfsqltype="cf_sql_varchar">,
                         <cfqueryparam value="#excelData.hobbies#" cfsqltype="cf_sql_varchar">,
-                        <cfqueryparam value="#arrayToList(local.result)#" cfsqltype="cf_sql_varchar">
+                        <cfqueryparam value="#arrayToList(local.result)#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#session.userid#" cfsqltype="cf_sql_integer">
                     )
                 </cfquery>
                 <cfset arrayClear(local.result)>

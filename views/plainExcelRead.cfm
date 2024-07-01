@@ -1,4 +1,5 @@
 <cfif structKeyExists(session, "uploadedFilePath")>
+
     <cfif session.uploadedFilePath neq "">
         <cfspreadsheet action="read" src="#session.uploadedFilePath#" query="spreadsheetData">
         <cfif isQuery(spreadsheetData)>

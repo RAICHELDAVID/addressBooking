@@ -23,6 +23,7 @@ $(document).ready(function () {
 				if (response.message == true) {
 					$("#message").text('Login successful!').css("color", "green");
 					window.location.href = "/views/listPage.cfm";
+					
 
 				} else {
 					$("#message").text('Invalid username or password!').css("color", "red");

@@ -5,6 +5,7 @@
     <cfset currentRow = 2>
 
     <cfloop array="#result#" index="person">
+        <cfif session.userid eq person.getuserid()>
             <cfset title = person.gettitle()>
             <cfset Fname = person.getFname()>
             <cfset Lname = person.getLname()>
@@ -33,7 +34,7 @@
             <cfset spreadsheetSetCellValue(spreadsheetObj, hobbies, currentRow, 12)>
             <cfset spreadsheetSetCellValue(spreadsheetObj, result, currentRow, 13)>
             <cfset currentRow = currentRow + 1>
-       
+        </cfif>    
     </cfloop>
 </cfoutput>
 
@@ -41,4 +42,4 @@
 <cfspreadsheet action="write" filename="#excelFilePath#" name="spreadsheetObj">
 
 <cfheader name="Content-Disposition" value="attachment; filename=persons.xlsx">
-<cfcontent type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" file="#excelFilePath#" deleteFile="true">
+<cfcontent type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" file="D:\addressBooking\views\#excelFilePath#" deleteFile="true">

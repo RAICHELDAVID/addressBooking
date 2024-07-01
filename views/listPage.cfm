@@ -23,7 +23,7 @@
 				</div>
 				<div class="printNone">
 					<p id="name">
-						<cfoutput>#session.fullname#</cfoutput>..
+						<cfoutput>#session.fullname#</cfoutput>
 					</p>
 				</div>
 				<div class="printNone">
