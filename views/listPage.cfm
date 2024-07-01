@@ -23,7 +23,7 @@
 				</div>
 				<div class="printNone">
 					<p id="name">
-						<cfoutput>#session.fullname#</cfoutput>..
+						<cfoutput>#session.fullname#</cfoutput>
 					</p>
 				</div>
 				<div class="printNone">
@@ -38,6 +38,10 @@
 							<h5 class="modal-title text-center mt-3" id="exampleModalLabel">UPLOAD EXCEL</h5>
 						</div>
 						<div class="modal-body">
+						<div class="float-end">
+							<a href="dataExcelRead.cfm" target="_blank" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Template with data</a>
+							<a href="plainExcelRead.cfm" target="_blank" class="btn btn-success btn-lg active" role="button" aria-pressed="true">Plain template</a>
+						</div>
 							<form action="listPage.cfm" method="post" enctype="multipart/form-data" id="formUpload">
 								<div class="d-flex flex-column">
 									<label>Upload File</label>
@@ -46,6 +50,7 @@
 							</form>
 							<p id="validationMessageExcel"></p>
 						</div>
+<!--- 						<a href="resultExcel.cfm" target="_blank" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Result</a> --->
 						<div class="modal-footer">
 							<button type="button" class="btn btn-primary uploadBtn">UPLOAD</button>
 							<button type="button" class="btn btn-secondary" data-dismiss="modal">CLOSE</button>
@@ -140,17 +145,7 @@
 								<div class="d-flex justify-content-between mt-4 titleLabel">
 									<div class="">
 										<label>Hobbies </label><br>
-  					
-										<div class="form-group">
-										<select class="selectpicker input-large" id="hobbies" multiple data-live-search="true">											
-											<option value="cricket">cricket</option>
-											<option value="swimming">swimming</option>
-											<option value="dancing">dancing</option>
-											<option value="reading">reading</option>
-											<option value="learning">learning</option>
-											<option value="surfing">surfing</option>
-    									</select>
-										</div>
+     									<select multiple id="hobbiesSelect" name="hobbies"></select>
 									</div>
 								</div><br>
 								<input type="hidden" name="personid" id="personid" value="0">

@@ -32,10 +32,11 @@
                                 <td>#person.getemailID()#</td>
                                 <td>#person.getphone()#</td>
                                 <td>
-                                    <cfset hobbies = EntityLoad("hobbies", { person = person})>
+                                    <cfset hobbies = EntityLoad("hobbies", { personid = person})>
                                     <cfif arrayLen(hobbies)>
                                         <cfloop array="#hobbies#" index="hobbies">
-                                            #hobbies.gethobby()#,
+                                            <cfset hobbyList = entityLoadByPK("hobbytable", hobbies.gethid())>
+                                            #hobbyList.gethname()#
                                         </cfloop>
                                     </cfif>
                                </td>    

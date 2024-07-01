@@ -16,16 +16,14 @@
             <cfset EmailID = person.getemailID()>
             <cfset Phone = person.getphone()>
             <cfset ImageName = person.getimage()>
-            <cfset hobbies = EntityLoad("hobbies", { person = person})>
-            
             <cfset hobbiesList = ''>
+            <cfset hobbies = EntityLoad("hobbies", { personid = person})>
             <cfif arrayLen(hobbies)>
                 <cfloop array="#hobbies#" index="hobby">
-                    <cfset hobbiesList &= hobby.gethobby() & ', '>
+                    <cfset hobbyRecord = entityLoadByPK("hobbytable", hobby.gethid())>
+                    <cfset hobbiesList &= hobbyRecord.gethname() & ', '>
                 </cfloop>
-                <cfset hobbiesList = left(hobbiesList, len(hobbiesList)-2)>
             </cfif>
-
             <cfif len(trim(ImageName))>
                 <cfset ImageURL = ExpandPath("./assets/uploads/") & ImageName>
             <cfelse>
