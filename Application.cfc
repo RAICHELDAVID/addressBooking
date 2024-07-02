@@ -41,6 +41,7 @@ component
 		var session.userid=0;
 		var session.image="";
 		var session.sso=false;
+		var session.uploadedFilePath = "";
 		return( true );
 
 	}
