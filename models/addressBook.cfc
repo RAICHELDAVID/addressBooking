@@ -253,9 +253,22 @@
         <cfset local.path = ExpandPath("../assets/uploads/")>
         <cffile action="upload" destination="#local.path#" nameconflict='makeunique'>
         <cfset session.uploadedFilePath = cffile.serverDirectory & "/" & cffile.serverFile>
-        <cfspreadsheet action="read" src="#session.uploadedFilePath#" query="excelData" headerrow="1" rows="2-100">
+        <cfspreadsheet action="read" src="#session.uploadedFilePath#" query="excelData" headerrow="1" excludeHeaderRow>
+        <!---<cfset local.exportFilePath = ExpandPath("../assets/uploads/") & "exported_data.xlsx">
+        <cfspreadsheet action="write" filename="#local.exportFilePath#" name="exportSheet" overwrite="true">
+        <cfset spreadsheetAddRow(exportSheet, "Title, Fname, Lname, Gender, DOB, Address, Street, Pincode, Phone, Image, Hobbies,Result")>--->
+<cfset local.exportFilePath = ExpandPath("../assets/uploads/") & "exported_data.xlsx">
+
+<cfset exportSheet = spreadsheetNew("exportSheet")>
+
+<cfset spreadsheetAddRow(exportSheet, "Title, Fname, Lname, Gender, DOB, Address, Street, Pincode, Phone, Image, Hobbies, Result")>
+
+<cfspreadsheet action="write" filename="#local.exportFilePath#" name="exportSheet" overwrite="true">
+
+
         <cfset local.result = []>
         <cfset local.hobbyValidation = []>
+        <cfset local.hobbyIds = []>
         <cfquery name="deleteExistingExcelPerson">
             DELETE FROM excelPerson
             WHERE userid=<cfqueryparam value="#session.userid#" cfsqltype="cf_sql_integer">
@@ -295,16 +308,20 @@
             <cfif not len(excelData.hobbies)>
                 <cfset arrayAppend(local.result, local.excelHeaders[12] & " missing")>
             <cfelse>
-                <cfloop list="#excelData.hobbies#" index="hobby">
-                    <cfquery name="local.hobbyInDatabase">
-                        SELECT hname
-                        FROM hobbyTable
-                        WHERE hname = <cfqueryparam value="#hobby#" cfsqltype="cf_sql_varchar">
+                <cfloop list="#excelData.hobbies#" index="hobbyName">
+                    <cfquery name="getHobbyId">
+                        SELECT hid
+                        FROM hobbytable
+                        WHERE hname = <cfqueryparam value="#hobbyName#" cfsqltype="cf_sql_varchar">
                     </cfquery>
-                    <cfif local.hobbyInDatabase.recordCount eq 0>
-                        <cfset arrayAppend(local.hobbyValidation, "cannot add Hobby '#hobby#'")>
+    
+                    <cfif getHobbyId.recordCount EQ 0>
+                        <cfset arrayAppend(local.hobbyValidation, "cannot add Hobby '#hobbyName#'")>
+                    <cfelse>
+                        <cfset arrayAppend(local.hobbyIds, getHobbyId.hid)>
                     </cfif>
                 </cfloop>
+
             </cfif>
             <cfset var local.formattedDate = DateFormat(excelData.dob, "dd-mm-yyyy")>
             <cfif not len(excelData.emailID)>
@@ -331,6 +348,33 @@
                         image = <cfqueryparam value="#excelData.image#" cfsqltype="cf_sql_varchar">
                         WHERE personid = <cfqueryparam value="#local.getEmail.personid#" cfsqltype="cf_sql_integer">
                     </cfquery>
+          
+                    <cfquery name="local.getExistingHobbies">
+                        SELECT hid
+                        FROM person_hobbies 
+                        WHERE personid = <cfqueryparam value="#local.getEmail.personid#" cfsqltype="cf_sql_integer">
+                    </cfquery>
+                    <cfset local.existingHobbiesList = ValueList(local.getExistingHobbies.hid)>
+                    <cfloop array="#local.hobbyIds#" index="hobby">
+                        <cfif not listFind(local.existingHobbiesList, hobby)>
+                            <cfquery>
+                                INSERT INTO person_hobbies (personid, hid)
+                                VALUES (
+                                    <cfqueryparam cfsqltype="cf_sql_integer" value="#local.getEmail.personid#">,
+                                    <cfqueryparam cfsqltype="cf_sql_integer" value="#hobby#">
+                                )
+                            </cfquery>
+                        </cfif>
+                    </cfloop>
+                    <cfif arrayLen(local.hobbyIds) GT 0>
+                        <cfquery name="deleteHobbies">
+                            DELETE FROM person_hobbies
+                            WHERE personid = <cfqueryparam value="#local.getEmail.personid#" cfsqltype="cf_sql_integer">
+                            AND hid NOT IN (
+                                <cfqueryparam value="#arrayToList(local.hobbyIds)#" cfsqltype="cf_sql_integer" list="true">
+                            )
+                        </cfquery>
+                    </cfif>
                     <cfset arrayAppend(local.result,"updated")>
                 </cfif>
                 
@@ -355,26 +399,20 @@
                         SELECT SCOPE_IDENTITY() AS personid
                 </cfquery>
                     <cfset local.personID = local.person.personid>
-                    <cfset local.hobbyList = listToArray(excelData.hobbies, ",")>
-                    <cfloop array="#local.hobbyList#" index="hobby">
-                        <cfquery  name="getHid">
-                            SELECT hid
-                            FROM hobbytable
-                            WHERE hname = <cfqueryparam value="#trim(hobby)#" cfsqltype="cf_sql_varchar">
+                    <cfif arrayLen(local.hobbyIds) GT 0>
+                     <cfloop array="#local.hobbyIds#" index="hobbyid">
+                        <cfquery name="insertHobbies">
+                            INSERT INTO person_hobbies (personid, hid)
+                            VALUES (
+                                <cfqueryparam value="#local.personID#" cfsqltype="cf_sql_integer">,
+                                <cfqueryparam value="#hobbyid#" cfsqltype="cf_sql_integer">
+                            )
                         </cfquery>
-                        <cfif getHid.recordCount>
-                            <cfquery >
-                                INSERT INTO person_hobbies (personid, hid)
-                                VALUES (
-                                    <cfqueryparam value="#local.personID#" cfsqltype="cf_sql_integer">,
-                                    <cfqueryparam value="#getHid.hid#" cfsqltype="cf_sql_integer">
-                                )
-                            </cfquery>
-                        </cfif>
-                    </cfloop>
+                        </cfloop>
+                    </cfif>
                     <cfset arrayAppend(local.result,"added")>
             </cfif>
-            <cfif !arrayIsEmpty(local.result)>
+            <!---<cfif !arrayIsEmpty(local.result)>
                <cfloop array="#local.hobbyValidation#" index="item">
                     <cfset arrayAppend(local.result, item)>
                 </cfloop>
@@ -399,8 +437,35 @@
                 </cfquery>
                 <cfset arrayClear(local.result)>
                 <cfset arrayClear(local.hobbyValidation)>
-            </cfif>
+                <cfset arrayClear(local.hobbyIds)>
+            </cfif>--->
+                <cfset local.rowData = {
+        "Title": excelData.title,
+        "Fname": excelData.Fname,
+        "Lname": excelData.Lname,
+        "Gender": excelData.gender,
+        "DOB": excelData.dob,
+        "Address": excelData.address,
+        "Street": excelData.street,
+        "Pincode": excelData.pincode,
+        "Phone": excelData.phone,
+        "Image": excelData.image,
+        "Hobbies": excelData.hobbies,
+        "Result":local.result
+    }>
+    <cfdump  var="#local.rowData#">
+    <cfset spreadsheetAddRow(exportSheet, local.rowData)>
+
+                <cfset arrayClear(local.result)>
+                <cfset arrayClear(local.hobbyValidation)>
+                <cfset arrayClear(local.hobbyIds)>
         </cfloop>
+
+
+<cfspreadsheet action="write" filename="#local.exportFilePath#" name="exportSheet" overwrite="true">
+
+<cfset spreadsheetClose(exportSheet)>
+<cfdump var="#local.rowData#">
         <cfreturn {"success": true}>
     </cffunction>
     <cffunction name="googleLogin" access="remote" returnType="query">

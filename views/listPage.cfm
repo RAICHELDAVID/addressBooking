@@ -31,7 +31,7 @@
 					<button type="button" class="btn btn-primary upload"  data-toggle="modal" data-target="##uploadModal">UPLOAD EXCEL</button>
 				</div>
 			</div>
-			<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal fade" id="uploadModal"  data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">
 						<div>
@@ -49,12 +49,16 @@
 								</div>
 							</form>
 							<p id="validationMessageExcel"></p>
+							<div>
+								<button type="button" class="btn btn-primary resultExcel">RESULT EXCEL</button>
+							</div>
 						</div>
 <!--- 						<a href="resultExcel.cfm" target="_blank" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Result</a> --->
 						<div class="modal-footer">
 							<button type="button" class="btn btn-primary uploadBtn">UPLOAD</button>
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">CLOSE</button>
+							<button type="button" class="btn btn-secondary" id="modalClose" data-dismiss="modal">CLOSE</button>
 						</div>
+				
 					</div>
 				</div>
 			</div>

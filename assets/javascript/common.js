@@ -248,7 +248,9 @@ $(document).ready(function () {
 		e.preventDefault();
 		$("#formID").get(0).reset();
 	});
-	
+	$('#modalClose').click(function (e){
+		window.location.reload();
+	});
 	$('.deleteLink').click(function (e) {
 		e.preventDefault();
 		var personid = $(this).attr('personid');
@@ -322,8 +324,7 @@ $(document).ready(function () {
 			}
 		});
 	});
-	
-	
+
 	$('#print').click(function () {
 		printContent('landscape');
 	});
@@ -372,7 +373,9 @@ $(document).ready(function () {
 			dataType: 'json',
 			success: function (response) {
 				if (response.success==true) {
-					window.location.href = "/views/resultExcel.cfm";
+					$("#validationMessageExcel").text('file uploaded').css("color", "green");
+					
+					// window.location.href = "/views/resultExcel.cfm";
 				}
 			}
 		});
