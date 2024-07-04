@@ -76,7 +76,7 @@ component{
         structDelete(session,"login");
         session.login=false;
         session.sso=false;
-        session.uploadedFilePath = "";
+        session.exportPath = "";
         cflocation(url="/views/login.cfm");
     }
 

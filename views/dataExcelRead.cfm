@@ -51,6 +51,5 @@
 
 <cfset excelFilePath = "persons_" & createUUID() & ".xlsx">
 <cfspreadsheet action="write" filename="#excelFilePath#" name="spreadsheetObj">
-
 <cfheader name="Content-Disposition" value="attachment; filename=ContactList.xlsx">
 <cfcontent type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" file="D:\addressBooking\views\#excelFilePath#" deleteFile="true">

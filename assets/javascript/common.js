@@ -372,10 +372,8 @@ $(document).ready(function () {
 			processData: false,
 			dataType: 'json',
 			success: function (response) {
-				if (response.success==true) {
-					$("#validationMessageExcel").text('file uploaded').css("color", "green");
-					
-					// window.location.href = "/views/resultExcel.cfm";
+				if (response.success==true) {					
+					window.location.href = "/views/resultExcel.cfm";
 				}
 			}
 		});
