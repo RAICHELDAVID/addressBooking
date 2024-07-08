@@ -395,6 +395,7 @@
                     </cfif>
                     <cfset arrayAppend(local.result,"added")>
             </cfif>
+            
             <cfset local.rowData = {
                 "Title": excelData.title,
                 "Fname": excelData.Fname,
@@ -415,30 +416,52 @@
             <cfset arrayClear(local.hobbyValidation)>
             <cfset arrayClear(local.hobbyIds)>
         </cfloop>
-        <cfset local.exportFilePath = ExpandPath("../assets/uploads/") & "exported_data.xlsx">
+        <cfset local.sortedData = resultSort(local.processedData)>
+        <cfset local.FileName = "export_" & createUUID() & ".xlsx">
+        <cfset local.exportFilePath = ExpandPath("../assets/uploads/") & local.FileName>
         <cfset exportSheet = spreadsheetNew("exportSheet")>
         <cfset spreadsheetAddRow(exportSheet, "Title, Fname, Lname, Gender, DOB, Address, Street, Pincode,Email, Phone, Image, Hobbies, Result")>
         <cfset currentRow = 2>
         <cfloop from="1" to="#arrayLen(local.processedData)#" index="i">
-            <cfset spreadsheetSetCellValue(exportSheet, local.processedData[i].Title, currentRow, 1)>
-            <cfset spreadsheetSetCellValue(exportSheet, local.processedData[i].Fname, currentRow, 2)>
-            <cfset spreadsheetSetCellValue(exportSheet, local.processedData[i].Lname, currentRow, 3)>
-            <cfset spreadsheetSetCellValue(exportSheet, local.processedData[i].Gender, currentRow, 4)>
-            <cfset spreadsheetSetCellValue(exportSheet, local.processedData[i].DOB, currentRow, 5)>
-            <cfset spreadsheetSetCellValue(exportSheet, local.processedData[i].Address, currentRow, 6)>
-            <cfset spreadsheetSetCellValue(exportSheet, local.processedData[i].Street, currentRow, 7)>
-            <cfset spreadsheetSetCellValue(exportSheet, local.processedData[i].Pincode, currentRow, 8)>
-            <cfset spreadsheetSetCellValue(exportSheet, local.processedData[i].Email, currentRow, 9)>
-            <cfset spreadsheetSetCellValue(exportSheet, local.processedData[i].Phone, currentRow, 10)>
-            <cfset spreadsheetSetCellValue(exportSheet, local.processedData[i].Image, currentRow, 11)>
-            <cfset spreadsheetSetCellValue(exportSheet, local.processedData[i].Hobbies, currentRow, 12)>
-            <cfset spreadsheetSetCellValue(exportSheet, arrayToList(local.processedData[i].Result), currentRow, 13)>
+            <cfset spreadsheetSetCellValue(exportSheet, local.sortedData[i].Title, currentRow, 1)>
+            <cfset spreadsheetSetCellValue(exportSheet, local.sortedData[i].Fname, currentRow, 2)>
+            <cfset spreadsheetSetCellValue(exportSheet, local.sortedData[i].Lname, currentRow, 3)>
+            <cfset spreadsheetSetCellValue(exportSheet, local.sortedData[i].Gender, currentRow, 4)>
+            <cfset spreadsheetSetCellValue(exportSheet, local.sortedData[i].DOB, currentRow, 5)>
+            <cfset spreadsheetSetCellValue(exportSheet, local.sortedData[i].Address, currentRow, 6)>
+            <cfset spreadsheetSetCellValue(exportSheet, local.sortedData[i].Street, currentRow, 7)>
+            <cfset spreadsheetSetCellValue(exportSheet, local.sortedData[i].Pincode, currentRow, 8)>
+            <cfset spreadsheetSetCellValue(exportSheet, local.sortedData[i].Email, currentRow, 9)>
+            <cfset spreadsheetSetCellValue(exportSheet, local.sortedData[i].Phone, currentRow, 10)>
+            <cfset spreadsheetSetCellValue(exportSheet, local.sortedData[i].Image, currentRow, 11)>
+            <cfset spreadsheetSetCellValue(exportSheet, local.sortedData[i].Hobbies, currentRow, 12)>
+            <cfset spreadsheetSetCellValue(exportSheet, arrayToList(local.sortedData[i].Result), currentRow, 13)>
+
             <cfset currentRow = currentRow + 1>
         </cfloop>
-      
         <cfspreadsheet action="write" filename="#local.exportFilePath#" name="exportSheet" overwrite="true">
         <cfset session.exportPath=local.exportFilePath>
         <cfreturn {"success": true}>
+    </cffunction>
+
+    <cffunction name="resultSort" returntype="array">
+        <cfargument name="array" type="array" required="true">
+        <cfset local.sortedArray = []>
+        <cfloop array="#arguments.array#" index="item">
+            <cfset  local.hasMissing = false>
+            <cfloop array="#item.result#" index="result">
+                <cfif findNoCase("missing", result) neq 0>
+                    <cfset local.hasMissing = true>
+                    <cfbreak>
+                </cfif>
+            </cfloop>
+            <cfif local.hasMissing>
+                <cfset arrayInsertAt(local.sortedArray, 1, item)>
+            <cfelse>
+                <cfset arrayAppend(local.sortedArray, item)>
+            </cfif>
+        </cfloop>
+        <cfreturn local.sortedArray>
     </cffunction>
     <cffunction name="googleLogin" access="remote" returnType="query">
         <cfargument name="emailID" required="true" type="string">

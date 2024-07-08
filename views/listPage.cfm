@@ -8,8 +8,8 @@
 			<div class="leftSpace"></div>
 			<div class="d-flex justify-content-end printDiv">
 				<div class="d-flex justify-content-end listDiv">
-					<a href="../views/pdfDownload.cfm" target="_blank" class="printNone"><img src="../assets/images/pdf.JPG" id="pdf" alt="pdf"></a>
-					<a href="../views/excelDownload.cfm" class="printNone"><img src="../assets/images/excel.JPG" id="excel" alt="excel"></a>
+					<a href="pdfDownload.cfm" target="_blank" class="printNone"><img src="../assets/images/pdf.JPG" id="pdf" alt="pdf"></a>
+					<a href="dataExcelRead.cfm?filename=Contactlist" class="printNone"><img src="../assets/images/excel.JPG" id="excel" alt="excel"></a>
 					<a href="" class="printNone"><span class="material-symbols-outlined print" id="print">print</span></a>
 				</div>
 			</div>
@@ -39,7 +39,7 @@
 						</div>
 						<div class="modal-body">
 						<div class="float-end">
-							<a href="dataExcelRead.cfm" target="_blank" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Template with data</a>
+							<a href="dataExcelRead.cfm?filename=excelTemplate" target="_blank" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Template with data</a>
 							<a href="plainExcelRead.cfm" target="_blank" class="btn btn-success btn-lg active" role="button" aria-pressed="true">Plain template</a>
 						</div>
 							<form action="listPage.cfm" method="post" enctype="multipart/form-data" id="formUpload">
@@ -49,11 +49,7 @@
 								</div>
 							</form>
 							<p id="validationMessageExcel"></p>
-							<div>
-								<button type="button" class="btn btn-primary resultExcel">RESULT EXCEL</button>
-							</div>
 						</div>
-<!--- 						<a href="resultExcel.cfm" target="_blank" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Result</a> --->
 						<div class="modal-footer">
 							<button type="button" class="btn btn-primary uploadBtn">UPLOAD</button>
 							<button type="button" class="btn btn-secondary" id="modalClose" data-dismiss="modal">CLOSE</button>

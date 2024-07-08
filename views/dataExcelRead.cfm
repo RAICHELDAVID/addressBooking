@@ -4,6 +4,7 @@
     <cfset spreadsheetAddRow(spreadsheetObj, "title, Fname,Lname, gender,dob, address, street, pincode, emailID, phone, image, hobbies")>
     <cfset currentRow = 2>
 
+
     <cfloop array="#persons#" index="person">
         <cfif session.userid eq person.getuserid()>
             <cfset title = person.gettitle()>
@@ -49,7 +50,7 @@
     </cfloop>
 </cfoutput>
 
-<cfset excelFilePath = "persons_" & createUUID() & ".xlsx">
-<cfspreadsheet action="write" filename="#excelFilePath#" name="spreadsheetObj">
-<cfheader name="Content-Disposition" value="attachment; filename=ContactList.xlsx">
-<cfcontent type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" file="D:\addressBooking\views\#excelFilePath#" deleteFile="true">
+<cfset excelFile = url.filename & "_" & createUUID() & ".xlsx">
+<cfspreadsheet action="write" filename="#expandPath('./')#/#excelFile#" name="spreadsheetObj">
+<cfheader name="Content-Disposition" value="attachment; filename=#url.filename#.xlsx">
+<cfcontent type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" file="D:\addressBooking\views\#excelFile#" deleteFile="true">
