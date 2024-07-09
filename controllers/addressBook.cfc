@@ -71,7 +71,6 @@ component{
            cflocation(url="./views/listPage.cfm");
         }
     }
-
     remote void function logout(){
         structDelete(session,"login");
         session.login=false;

@@ -1,10 +1,7 @@
 <cfoutput>
     <cfset persons = EntityLoad("person")>
     <cfset spreadsheetObj = spreadsheetNew()>
-    <cfset spreadsheetAddRow(spreadsheetObj, "title, Fname,Lname, gender,dob, address, street, pincode, emailID, phone, image, hobbies")>
-    <cfset currentRow = 2>
-
-
+    <cfset excelData = queryNew("title, Fname,Lname, gender,dob, address, street, pincode, emailID, phone, image, hobbies","varchar,varchar,varchar,varchar,varchar,varchar,varchar,varchar,varchar,varchar,varchar,varchar")> 
     <cfloop array="#persons#" index="person">
         <cfif session.userid eq person.getuserid()>
             <cfset title = person.gettitle()>
@@ -23,34 +20,29 @@
             <cfif arrayLen(hobbies)>
                 <cfloop array="#hobbies#" index="hobby">
                     <cfset hobbyRecord = entityLoadByPK("hobbytable", hobby.gethid())>
-                    <cfset hobbiesList &= hobbyRecord.gethname() & ', '>
+                    <cfset hobbiesList &=' '&hobbyRecord.gethname()>
                 </cfloop>
             </cfif>
-            <cfif len(trim(image))>
-                <cfset ImageURL = ExpandPath("./assets/uploads/") & image>
-            <cfelse>
-                <cfset ImageURL = "">
-            </cfif>
-
-            <cfset spreadsheetSetCellValue(spreadsheetObj, title, currentRow, 1)>
-            <cfset spreadsheetSetCellValue(spreadsheetObj, Fname, currentRow, 2)>
-            <cfset spreadsheetSetCellValue(spreadsheetObj, Lname, currentRow, 3)>
-            <cfset spreadsheetSetCellValue(spreadsheetObj, gender, currentRow, 4)>
-            <cfset spreadsheetSetCellValue(spreadsheetObj, dob, currentRow, 5)>
-            <cfset spreadsheetSetCellValue(spreadsheetObj, address, currentRow, 6)>
-            <cfset spreadsheetSetCellValue(spreadsheetObj, street, currentRow, 7)>
-            <cfset spreadsheetSetCellValue(spreadsheetObj, pincode, currentRow, 8)>
-            <cfset spreadsheetSetCellValue(spreadsheetObj, emailID, currentRow, 9)>
-            <cfset spreadsheetSetCellValue(spreadsheetObj, phone, currentRow, 10)>
-            <cfset spreadsheetSetCellValue(spreadsheetObj, ImageURL, currentRow, 11)>
-            <cfset spreadsheetSetCellValue(spreadsheetObj, hobbiesList, currentRow, 12)>
-            
-            <cfset currentRow = currentRow + 1>
+ 
+            <cfset queryAddRow(excelData, 1)>
+            <cfset querySetCell(excelData, "title", title)>
+            <cfset querySetCell(excelData, "Fname", Fname)>
+            <cfset querySetCell(excelData, "Lname", Lname)>
+            <cfset querySetCell(excelData,"gender",gender)>
+            <cfset querySetCell(excelData,"dob",dob)>
+            <cfset querySetCell(excelData, "address", address)>
+            <cfset querySetCell(excelData,'street',street)>
+            <cfset querySetCell(excelData,'pincode',pincode)>
+            <cfset querySetCell(excelData, "emailID", emailID)>
+            <cfset querySetCell(excelData,'phone',phone)>
+            <cfset querySetCell(excelData,'image',image)>
+            <cfset querySetCell(excelData,'hobbies',hobbiesList)>
         </cfif>
     </cfloop>
-</cfoutput>
 
 <cfset excelFile = url.filename & "_" & createUUID() & ".xlsx">
-<cfspreadsheet action="write" filename="#expandPath('./')#/#excelFile#" name="spreadsheetObj">
+<cfspreadsheet action="write" filename="#expandPath('./')#/#excelFile#" query="excelData">
 <cfheader name="Content-Disposition" value="attachment; filename=#url.filename#.xlsx">
 <cfcontent type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" file="D:\addressBooking\views\#excelFile#" deleteFile="true">
+</cfoutput>
+

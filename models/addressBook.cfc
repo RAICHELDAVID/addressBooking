@@ -306,7 +306,6 @@
                         <cfset arrayAppend(local.hobbyIds, getHobbyId.hid)>
                     </cfif>
                 </cfloop>
-
             </cfif>
             <cfset var local.formattedDate = DateFormat(excelData.dob, "dd-mm-yyyy")>
             <cfif not len(excelData.emailID)>
@@ -395,7 +394,11 @@
                     </cfif>
                     <cfset arrayAppend(local.result,"added")>
             </cfif>
-            
+            <cfif arrayLen(local.hobbyValidation) neq 0>
+                <cfloop from="1" to="#ArrayLen(local.hobbyValidation)#" index="i">
+                    <cfset ArrayAppend(local.result, local.hobbyValidation[i])>
+                </cfloop>
+            </cfif>
             <cfset local.rowData = {
                 "Title": excelData.title,
                 "Fname": excelData.Fname,
@@ -446,9 +449,9 @@
 
     <cffunction name="resultSort" returntype="array">
         <cfargument name="array" type="array" required="true">
-        <cfset local.sortedArray = []>
+        <cfset local.sortedArray = []> 
         <cfloop array="#arguments.array#" index="item">
-            <cfset  local.hasMissing = false>
+            <cfset local.hasMissing = false>
             <cfloop array="#item.result#" index="result">
                 <cfif findNoCase("missing", result) neq 0>
                     <cfset local.hasMissing = true>
@@ -456,13 +459,18 @@
                 </cfif>
             </cfloop>
             <cfif local.hasMissing>
-                <cfset arrayInsertAt(local.sortedArray, 1, item)>
+                <cfif ArrayLen(local.sortedArray) eq 0>
+                    <cfset arrayAppend(local.sortedArray, item)>
+                <cfelse>
+                    <cfset arrayInsertAt(local.sortedArray, 1, item)>
+                </cfif>
             <cfelse>
                 <cfset arrayAppend(local.sortedArray, item)>
             </cfif>
         </cfloop>
         <cfreturn local.sortedArray>
     </cffunction>
+
     <cffunction name="googleLogin" access="remote" returnType="query">
         <cfargument name="emailID" required="true" type="string">
         <cfquery name="googleLogin" >
