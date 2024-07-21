@@ -8,8 +8,8 @@
 			<div class="leftSpace"></div>
 			<div class="d-flex justify-content-end printDiv">
 				<div class="d-flex justify-content-end listDiv">
-					<a href="../views/pdfDownload.cfm" target="_blank" class="printNone"><img src="../assets/images/pdf.JPG" id="pdf" alt="pdf"></a>
-					<a href="../views/excelDownload.cfm" class="printNone"><img src="../assets/images/excel.JPG" id="excel" alt="excel"></a>
+					<a href="pdfDownload.cfm" target="_blank" class="printNone"><img src="../assets/images/pdf.JPG" id="pdf" alt="pdf"></a>
+					<a href="dataExcelRead.cfm?filename=Contactlist" class="printNone"><img src="../assets/images/excel.JPG" id="excel" alt="excel"></a>
 					<a href="" class="printNone"><span class="material-symbols-outlined print" id="print">print</span></a>
 				</div>
 			</div>
@@ -23,7 +23,7 @@
 				</div>
 				<div class="printNone">
 					<p id="name">
-						<cfoutput>#session.fullname#</cfoutput>..
+						<cfoutput>#session.fullname#</cfoutput>
 					</p>
 				</div>
 				<div class="printNone">
@@ -31,13 +31,17 @@
 					<button type="button" class="btn btn-primary upload"  data-toggle="modal" data-target="##uploadModal">UPLOAD EXCEL</button>
 				</div>
 			</div>
-			<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal fade" id="uploadModal"  data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">
 						<div>
 							<h5 class="modal-title text-center mt-3" id="exampleModalLabel">UPLOAD EXCEL</h5>
 						</div>
 						<div class="modal-body">
+						<div class="float-end">
+							<a href="dataExcelRead.cfm?filename=excelTemplate" target="_blank" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Template with data</a>
+							<a href="plainExcelRead.cfm" target="_blank" class="btn btn-success btn-lg active" role="button" aria-pressed="true">Plain template</a>
+						</div>
 							<form action="listPage.cfm" method="post" enctype="multipart/form-data" id="formUpload">
 								<div class="d-flex flex-column">
 									<label>Upload File</label>
@@ -48,8 +52,9 @@
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-primary uploadBtn">UPLOAD</button>
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">CLOSE</button>
+							<button type="button" class="btn btn-secondary" id="modalClose" data-dismiss="modal">CLOSE</button>
 						</div>
+				
 					</div>
 				</div>
 			</div>
@@ -140,17 +145,7 @@
 								<div class="d-flex justify-content-between mt-4 titleLabel">
 									<div class="">
 										<label>Hobbies </label><br>
-  					
-										<div class="form-group">
-										<select class="selectpicker input-large" id="hobbies" multiple data-live-search="true">											
-											<option value="cricket">cricket</option>
-											<option value="swimming">swimming</option>
-											<option value="dancing">dancing</option>
-											<option value="reading">reading</option>
-											<option value="learning">learning</option>
-											<option value="surfing">surfing</option>
-    									</select>
-										</div>
+     									<select multiple id="hobbiesSelect" name="hobbies"></select>
 									</div>
 								</div><br>
 								<input type="hidden" name="personid" id="personid" value="0">
